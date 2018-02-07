@@ -20,14 +20,14 @@ namespace GameSim
                 {
                     if (i == 0 || i == height - 1)
                     {
-                        sectorLayout[i, j] = new Sector('-');
+                        sectorLayout[i, j] = new Sector('-', r);
                     }
                     else if(j == 0 || j == length - 1)
                     {
-                        sectorLayout[i, j] = new Sector('|');
+                        sectorLayout[i, j] = new Sector('|', r);
                     } else
                     {
-                        sectorLayout[i, j] = new Sector(' ');
+                        sectorLayout[i, j] = new Sector(' ', r);
                     }
                 }
             } //initial decl
@@ -35,15 +35,17 @@ namespace GameSim
         }
         public void populateGalaxy()
         {
-            galGen(15, 35, 1);
+            //galGen(15, 35, 1);
+            galGen();
         }
         public void populateGalaxy(int init, int roll, int decr)
         {
-            galGen(init, roll, decr);
+            //galGen(init, roll, decr);
+            galGen();
         }
         private void galGen(int init, int roll, int decr)
         {
-            Random r = new Random();
+            //Random r = new Random();
             int a, b;
             for (int count = 0; count < init;)
             {
@@ -51,7 +53,7 @@ namespace GameSim
                 a = r.Next(1, height - 1);
                 if (!surrounded(a, b))
                 {
-                    sectorLayout[a, b] = new Sector('O');
+                    sectorLayout[a, b] = new Sector('O', r);
                     allSectors.Add(new int[2] { b, a }); //lat, long
                     count++;
                 }
@@ -67,7 +69,48 @@ namespace GameSim
                 a = r.Next(1, height - 1);
                 if (!surrounded(a, b))
                 {
-                    sectorLayout[a, b] = new Sector('O');
+                    sectorLayout[a, b] = new Sector('O', r);
+                    allSectors.Add(new int[2] { b, a }); //lat, long
+                    roll = roll - decr;
+                }
+            }
+            ship[0] = allSectors[0][0]; //lat
+            ship[1] = allSectors[0][1]; //long
+            sectorLayout[ship[1], ship[0]].displayToken = '@';
+            ship[2] = 1; //docked
+            ship[3] = 0;
+            //ship always starts docked at first generated sector
+        }
+        private void galGen()
+        {
+            int init = (int)Math.Ceiling((double)length * height / 400);
+            int roll = 3*init;
+            int decr = 2;
+            //Random r = new Random();
+            int a, b;
+            for (int count = 0; count < init;)
+            {
+                b = r.Next(1, length - 1);
+                a = r.Next(1, height - 1);
+                if (!surrounded(a, b))
+                {
+                    sectorLayout[a, b] = new Sector('O', r);
+                    allSectors.Add(new int[2] { b, a }); //lat, long
+                    count++;
+                }
+            }
+            for (; ; )
+            {
+                a = r.Next(0, roll);
+                if (a == 0)
+                {
+                    break;
+                }
+                b = r.Next(1, length - 1);
+                a = r.Next(1, height - 1);
+                if (!surrounded(a, b))
+                {
+                    sectorLayout[a, b] = new Sector('O', r);
                     allSectors.Add(new int[2] { b, a }); //lat, long
                     roll = roll - decr;
                 }
@@ -123,15 +166,68 @@ namespace GameSim
 
         public void printGalaxy()
         {
-            for (int i = 0; i < height; i++)
+            int iInit = 0;
+            int iTo = 0;
+            int jInit = 0;
+            int jTo = 0;
+            if(height <= 49)
             {
-                for (int j = 0; j < length; j++)
+                iInit = 0;
+                iTo = height;
+            }
+            else
+            {
+                iInit = ship[1] - 24;
+                iTo = ship[1] + 24;
+                if(iInit < 0)
+                {
+                    iInit = 0;
+                    iTo = 48;
+                }
+                else if(iTo >= height)
+                {
+                    iInit = height - 49;
+                    iTo = height - 1;
+                }
+            }
+            if (length <= 101)
+            {
+                jInit = 0;
+                jTo = length;
+            }
+            else
+            {
+                jInit = ship[0] - 50;
+                jTo = ship[0] + 50;
+                if (jInit < 0)
+                {
+                    jInit = 0;
+                    jTo = 100;
+                }
+                else if (jTo >= length)
+                {
+                    jInit = length - 101;
+                    jTo = length - 1;
+                }
+            }
+            for(int j = jInit; j < jTo+2; j++){
+                Console.Write('-');
+            }
+            Console.WriteLine();
+            for (int i = iInit; i < iTo; i++)
+            {
+                Console.Write('|');
+                for (int j = jInit; j < jTo; j++)
                 {
                     Console.Write(sectorLayout[i,j].displayToken);
                 }
-                Console.WriteLine();
+                Console.WriteLine('|');
             }
-            Console.Write("You are ");
+            for (int j = jInit; j < jTo+2; j++)
+            {
+                Console.Write('-');
+            }
+            Console.Write("\nYou are ");
             if(ship[2] == 1)
             {
                 Console.Write("orbiting ");
@@ -146,9 +242,9 @@ namespace GameSim
         {
             for(int i = 0; i < allSectors.Count(); i++)
             {
-                Console.WriteLine("Sector located at ({0}, {1})", allSectors[i][0], allSectors[i][1]);
+                Console.WriteLine("{0} located at ({1}, {2}) (size: {3})", sectorLayout[allSectors[i][1], allSectors[i][0]].sectorType, allSectors[i][0], allSectors[i][1], sectorLayout[allSectors[i][1], allSectors[i][0]].psize);
             }
-            Console.WriteLine("{0} sectors total", allSectors.Count());
+            Console.WriteLine("{0} planets total", allSectors.Count());
         }
 
         public bool motion()
@@ -223,7 +319,7 @@ namespace GameSim
                 ship[0] = ship[0] + dist;
                 sectorLayout[ship[1], ship[0]].displayToken = '>';
             }
-            if(sectorLayout[ship[1], ship[0]].defaultToken != ' ')
+            if (sectorLayout[ship[1], ship[0]].defaultToken != ' ' && sectorLayout[ship[1], ship[0]].defaultToken != '|' && sectorLayout[ship[1], ship[0]].defaultToken != '-')
             {
                 sectorLayout[ship[1], ship[0]].displayToken = '@';
                 ship[2] = 1;
@@ -239,6 +335,7 @@ namespace GameSim
         private int height;
         private Sector[,] sectorLayout;
         public List<int[]> allSectors;
-        public int[] ship;
+        public int[] ship; // lat, long, docked, direction
+        private Random r = new Random();
     }
 }
