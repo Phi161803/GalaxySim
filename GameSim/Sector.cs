@@ -8,6 +8,7 @@ namespace GameSim
 {
     class Sector
     {
+        // initial construction stuff; constructor and called-by-constructor
         public Sector()
         {
             displayToken = ' ';
@@ -29,10 +30,6 @@ namespace GameSim
             }
             defaultToken = displayToken;
         } //sets sector based on input char
-        public void restore()
-        {
-            displayToken = defaultToken;
-        } // used when ship moves away, restores display token to value of (permanent) default token
         public void setType()
         {
             if (displayToken == ' ')
@@ -65,7 +62,6 @@ namespace GameSim
                 displayToken = defaultToken = '0';
             }
         } // sets the name of the type of sector, display purposes
-
         private int sizeSet(int rolls, int chanceoften)
         {
             int size = 0;
@@ -104,6 +100,8 @@ namespace GameSim
                 }
             }
         } // generates map of the planet if planet exists
+
+        // used in gameplay
         public void planetPrint()
         {
             if(psize == 0)
@@ -119,9 +117,13 @@ namespace GameSim
                 Console.WriteLine();
             }
         } // prints the map of the planet
+        public void restore()
+        {
+            displayToken = defaultToken;
+        } // used when ship moves away, restores display token to value of (permanent) default token
 
         public char displayToken;
-        private char defaultToken;
+        public char defaultToken { get; private set; }
         public string sectorType { get; private set; }
         public int psize { get; private set; }
         private char[,] map;

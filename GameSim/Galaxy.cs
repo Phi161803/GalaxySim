@@ -8,6 +8,7 @@ namespace GameSim
 {
     class Galaxy
     {
+        // initial construction stuff, constructor and called-by-constructor
         public Galaxy(int l, int h)
         {
             length = l;
@@ -51,7 +52,7 @@ namespace GameSim
                     allSectors.Add(new int[2] { b, a }); //lat, long
                     count++;
                 }
-            }
+            } // first passthrough of planet gen, always generates [init] number of planets
             for (; ; )
             {
                 a = Program.r.Next(0, roll);
@@ -67,7 +68,7 @@ namespace GameSim
                     allSectors.Add(new int[2] { b, a }); //lat, long
                     roll = roll - decr;
                 }
-            }
+            } // second passthrough of planet gen, 1/[roll] chance of breaking, else makes planet and decreases [roll]
             ship[0] = allSectors[0][0]; //lat
             ship[1] = allSectors[0][1]; //long
             sectorLayout[ship[1], ship[0]].displayToken = '@';
@@ -75,7 +76,6 @@ namespace GameSim
             ship[3] = 0;
             //ship always starts docked at first generated sector
         } // populates map with planets
-
         private bool surrounded(int a, int b)
         {
             if (sectorLayout[a, b].displayToken != ' ')
@@ -117,6 +117,7 @@ namespace GameSim
             return false;
         } // checks if potential planet location has any nearby planets
 
+        // output display stuff
         public void printGalaxy()
         {
             int iInit = 0;
@@ -215,6 +216,7 @@ namespace GameSim
             sectorLayout[ship[1], ship[0]].planetPrint();
         } // prints current location information, including planet map if at a planet
 
+        // gameplay stuff
         public bool play()
         {
             //for ship[3] 0 up, 1 left, 2 down, 3 right, defaults to 0
@@ -301,8 +303,8 @@ namespace GameSim
 
         private int length;
         private int height;
-        private Sector[,] sectorLayout;
-        public List<int[]> allSectors;
+        private Sector[,] sectorLayout; // list of all sectors; long, lat
+        public List<int[]> allSectors; // list of coordinates of all planets; lat, long
         public int[] ship; // lat, long, docked, direction
     }
 }
