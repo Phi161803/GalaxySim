@@ -20,14 +20,14 @@ namespace GameSim
                 {
                     if (i == 0 || i == height - 1)
                     {
-                        sectorLayout[i, j] = new Sector('-', r);
+                        sectorLayout[i, j] = new Sector('-');
                     }
                     else if(j == 0 || j == length - 1)
                     {
-                        sectorLayout[i, j] = new Sector('|', r);
+                        sectorLayout[i, j] = new Sector('|');
                     } else
                     {
-                        sectorLayout[i, j] = new Sector(' ', r);
+                        sectorLayout[i, j] = new Sector(' ');
                     }
                 }
             } //initial decl
@@ -43,27 +43,27 @@ namespace GameSim
             int a, b;
             for (int count = 0; count < init;)
             {
-                b = r.Next(1, length - 1);
-                a = r.Next(1, height - 1);
+                b = Program.r.Next(1, length - 1);
+                a = Program.r.Next(1, height - 1);
                 if (!surrounded(a, b))
                 {
-                    sectorLayout[a, b] = new Sector('O', r);
+                    sectorLayout[a, b] = new Sector('O');
                     allSectors.Add(new int[2] { b, a }); //lat, long
                     count++;
                 }
             }
             for (; ; )
             {
-                a = r.Next(0, roll);
+                a = Program.r.Next(0, roll);
                 if (a == 0)
                 {
                     break;
                 }
-                b = r.Next(1, length - 1);
-                a = r.Next(1, height - 1);
+                b = Program.r.Next(1, length - 1);
+                a = Program.r.Next(1, height - 1);
                 if (!surrounded(a, b))
                 {
-                    sectorLayout[a, b] = new Sector('O', r);
+                    sectorLayout[a, b] = new Sector('O');
                     allSectors.Add(new int[2] { b, a }); //lat, long
                     roll = roll - decr;
                 }
@@ -203,11 +203,16 @@ namespace GameSim
                 Console.Write("located at ");
             }
             Console.Write("{0} at ({1}, {2})", sectorLayout[ship[1], ship[0]].sectorType, ship[0], ship[1]);
+            if(ship[2] == 0)
+            {
+                Console.WriteLine();
+                return;
+            }
             if(ship[2] == 1)
             {
-                Console.Write(" [size: {0}]", sectorLayout[ship[1], ship[0]].psize);
+                Console.WriteLine(" [size: {0}]", sectorLayout[ship[1], ship[0]].psize);
             }
-            Console.WriteLine();
+            sectorLayout[ship[1], ship[0]].planetPrint();
         }
 
         public bool motion()
@@ -299,6 +304,5 @@ namespace GameSim
         private Sector[,] sectorLayout;
         public List<int[]> allSectors;
         public int[] ship; // lat, long, docked, direction
-        private Random r = new Random();
     }
 }

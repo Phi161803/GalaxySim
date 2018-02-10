@@ -14,7 +14,7 @@ namespace GameSim
             sectorType = "empty space";
             defaultToken = displayToken;
         }
-        public Sector(char x, Random r)
+        public Sector(char x)
         {
             displayToken = x;
             if(x == ' ' || x == '|' || x == '-')
@@ -23,8 +23,9 @@ namespace GameSim
             }
             else
             {
-                psize = sizeSet(20, 6, r);
+                psize = sizeSet(20, 6);
                 setType();
+                planetMap();
             }
             defaultToken = displayToken;
         }
@@ -65,13 +66,12 @@ namespace GameSim
             }
         }
 
-        private int sizeSet(int rolls, int chanceoften, Random r)
+        private int sizeSet(int rolls, int chanceoften)
         {
-            //Random r = new Random();
             int size = 0;
             for(int i = 0; i < rolls; i++)
             {
-                if(r.Next(10) < chanceoften)
+                if(Program.r.Next(10) < chanceoften)
                 {
                     size++;
                 }
@@ -82,13 +82,49 @@ namespace GameSim
             }
             return size;
         }
+        private void planetMap()
+        {
+            map = new char[psize + 2, (2 * psize) + 2];
+            for(int i = 0; i < psize + 2; i++)
+            {
+                for(int j = 0; j < (2 * psize) + 2; j++)
+                {
+                    if(i == 0 || i == psize + 1)
+                    {
+                        map[i, j] = '-';
+                    }
+                    else if (j == 0 || j == (2 * psize) + 1)
+                    {
+                        map[i, j] = '|';
+                    }
+                    else
+                    {
+                        map[i, j] = ' ';
+                    }
+                }
+            }
+        }
+        public void planetPrint()
+        {
+            if(psize == 0)
+            {
+                return;
+            }
+            for (int i = 0; i < psize + 2; i++)
+            {
+                for (int j = 0; j < (2 * psize) + 2; j++)
+                {
+                    Console.Write(map[i, j]);
+                }
+                Console.WriteLine();
+            }
+        }
 
         public char displayToken;
         public char defaultToken { get; private set; }
         public string sectorType { get; private set; }
         public int psize { get; private set; }
         private char[,] map;
-        //private Random r = new Random();
         //public int[] location { get; private set; }
     }
 }

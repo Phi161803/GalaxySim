@@ -17,6 +17,6 @@ namespace GameSim
             while (thisGal.motion()) ;
         }
 
-        static Random r = new Random();
+        static public Random r = new Random();
     }
 }
