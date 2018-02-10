@@ -11,7 +11,6 @@ namespace GameSim
         static void Main(string[] args)
         {
             Galaxy thisGal = new Galaxy(1000, 1000);
-            thisGal.populateGalaxy(16, 40, 2);
             thisGal.printGalaxy();
             //thisGal.printSectors();
             Console.WriteLine("{0} planets total", thisGal.allSectors.Count());

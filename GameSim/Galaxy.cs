@@ -32,54 +32,7 @@ namespace GameSim
                 }
             } //initial decl
             ship = new int[4]; // lat, long, docked, direction
-        }
-        public void populateGalaxy()
-        {
-            //galGen(15, 35, 1);
             galGen();
-        }
-        public void populateGalaxy(int init, int roll, int decr)
-        {
-            //galGen(init, roll, decr);
-            galGen();
-        }
-        private void galGen(int init, int roll, int decr)
-        {
-            //Random r = new Random();
-            int a, b;
-            for (int count = 0; count < init;)
-            {
-                b = r.Next(1, length - 1);
-                a = r.Next(1, height - 1);
-                if (!surrounded(a, b))
-                {
-                    sectorLayout[a, b] = new Sector('O', r);
-                    allSectors.Add(new int[2] { b, a }); //lat, long
-                    count++;
-                }
-            }
-            for(; ; )
-            {
-                a = r.Next(0, roll);
-                if(a == 0)
-                {
-                    break;
-                }
-                b = r.Next(1, length - 1);
-                a = r.Next(1, height - 1);
-                if (!surrounded(a, b))
-                {
-                    sectorLayout[a, b] = new Sector('O', r);
-                    allSectors.Add(new int[2] { b, a }); //lat, long
-                    roll = roll - decr;
-                }
-            }
-            ship[0] = allSectors[0][0]; //lat
-            ship[1] = allSectors[0][1]; //long
-            sectorLayout[ship[1], ship[0]].displayToken = '@';
-            ship[2] = 1; //docked
-            ship[3] = 0;
-            //ship always starts docked at first generated sector
         }
         private void galGen()
         {
@@ -227,16 +180,8 @@ namespace GameSim
             {
                 Console.Write('-');
             }
-            Console.Write("\nYou are ");
-            if(ship[2] == 1)
-            {
-                Console.Write("orbiting ");
-            }
-            else
-            {
-                Console.Write("located at ");
-            }
-            Console.WriteLine("{0} at ({1}, {2})", sectorLayout[ship[1], ship[0]].sectorType, ship[0], ship[1]);
+            Console.WriteLine();
+            printHere();
         }
         public void printSectors()
         {
@@ -245,6 +190,24 @@ namespace GameSim
                 Console.WriteLine("{0} located at ({1}, {2}) (size: {3})", sectorLayout[allSectors[i][1], allSectors[i][0]].sectorType, allSectors[i][0], allSectors[i][1], sectorLayout[allSectors[i][1], allSectors[i][0]].psize);
             }
             Console.WriteLine("{0} planets total", allSectors.Count());
+        }
+        public void printHere()
+        {
+            Console.Write("You are ");
+            if (ship[2] == 1)
+            {
+                Console.Write("orbiting ");
+            }
+            else
+            {
+                Console.Write("located at ");
+            }
+            Console.Write("{0} at ({1}, {2})", sectorLayout[ship[1], ship[0]].sectorType, ship[0], ship[1]);
+            if(ship[2] == 1)
+            {
+                Console.Write(" [size: {0}]", sectorLayout[ship[1], ship[0]].psize);
+            }
+            Console.WriteLine();
         }
 
         public bool motion()
