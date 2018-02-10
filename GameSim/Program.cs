@@ -10,11 +10,11 @@ namespace GameSim
     {
         static void Main(string[] args)
         {
-            Galaxy thisGal = new Galaxy(1000, 1000);
+            Galaxy thisGal = new Galaxy(1000, 1000); // length, height of galaxy
             thisGal.printGalaxy();
             //thisGal.printSectors();
-            Console.WriteLine("{0} planets total", thisGal.allSectors.Count());
-            while (thisGal.motion()) ;
+            Console.WriteLine("{0} planets total", thisGal.allSectors.Count()); // used for debug/testing
+            while (thisGal.play()) ; // loops game
         }
 
         static public Random r = new Random();

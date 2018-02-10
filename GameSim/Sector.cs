@@ -13,7 +13,7 @@ namespace GameSim
             displayToken = ' ';
             sectorType = "empty space";
             defaultToken = displayToken;
-        }
+        } // default constructor, sets sector to empty space
         public Sector(char x)
         {
             displayToken = x;
@@ -23,16 +23,16 @@ namespace GameSim
             }
             else
             {
-                psize = sizeSet(20, 6);
+                psize = sizeSet(20, 4);
                 setType();
                 planetMap();
             }
             defaultToken = displayToken;
-        }
+        } //sets sector based on input char
         public void restore()
         {
             displayToken = defaultToken;
-        }
+        } // used when ship moves away, restores display token to value of (permanent) default token
         public void setType()
         {
             if (displayToken == ' ')
@@ -64,7 +64,7 @@ namespace GameSim
                 sectorType = "a planet";
                 displayToken = defaultToken = '0';
             }
-        }
+        } // sets the name of the type of sector, display purposes
 
         private int sizeSet(int rolls, int chanceoften)
         {
@@ -81,7 +81,7 @@ namespace GameSim
                 return 4;
             }
             return size;
-        }
+        } // randomly sets size of planet, typical size is 2*chanceoften
         private void planetMap()
         {
             map = new char[psize + 2, (2 * psize) + 2];
@@ -103,7 +103,7 @@ namespace GameSim
                     }
                 }
             }
-        }
+        } // generates map of the planet if planet exists
         public void planetPrint()
         {
             if(psize == 0)
@@ -118,10 +118,10 @@ namespace GameSim
                 }
                 Console.WriteLine();
             }
-        }
+        } // prints the map of the planet
 
         public char displayToken;
-        public char defaultToken { get; private set; }
+        private char defaultToken;
         public string sectorType { get; private set; }
         public int psize { get; private set; }
         private char[,] map;

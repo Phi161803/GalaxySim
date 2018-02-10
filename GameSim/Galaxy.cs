@@ -33,7 +33,7 @@ namespace GameSim
             } //initial decl
             ship = new int[4]; // lat, long, docked, direction
             galGen();
-        }
+        } // constructor, generates map + borders, other default info
         private void galGen()
         {
             int init = (int)Math.Ceiling((double)length * height / 400);
@@ -74,7 +74,7 @@ namespace GameSim
             ship[2] = 1; //docked
             ship[3] = 0;
             //ship always starts docked at first generated sector
-        }
+        } // populates map with planets
 
         private bool surrounded(int a, int b)
         {
@@ -115,7 +115,7 @@ namespace GameSim
                 return true;
             }
             return false;
-        }
+        } // checks if potential planet location has any nearby planets
 
         public void printGalaxy()
         {
@@ -182,7 +182,7 @@ namespace GameSim
             }
             Console.WriteLine();
             printHere();
-        }
+        } // prints map of surrounding galactic map
         public void printSectors()
         {
             for(int i = 0; i < allSectors.Count(); i++)
@@ -190,7 +190,7 @@ namespace GameSim
                 Console.WriteLine("{0} located at ({1}, {2}) (size: {3})", sectorLayout[allSectors[i][1], allSectors[i][0]].sectorType, allSectors[i][0], allSectors[i][1], sectorLayout[allSectors[i][1], allSectors[i][0]].psize);
             }
             Console.WriteLine("{0} planets total", allSectors.Count());
-        }
+        } // prints full list of all generated planets (DO NOT USE AT LARGE MAP SIZES)
         public void printHere()
         {
             Console.Write("You are ");
@@ -213,9 +213,9 @@ namespace GameSim
                 Console.WriteLine(" [size: {0}]", sectorLayout[ship[1], ship[0]].psize);
             }
             sectorLayout[ship[1], ship[0]].planetPrint();
-        }
+        } // prints current location information, including planet map if at a planet
 
-        public bool motion()
+        public bool play()
         {
             //for ship[3] 0 up, 1 left, 2 down, 3 right, defaults to 0
             string input = Console.ReadLine().ToLower();
@@ -262,7 +262,7 @@ namespace GameSim
             }
             moving(ship[3], dist);
             return true;
-        }
+        } // gameplay wrapper function, currently only handles motion input
         private void moving(int dir, int dist)
         {
             //for ship[3] 0 up, 1 left, 2 down, 3 right, defaults to 0
@@ -297,7 +297,7 @@ namespace GameSim
                 ship[2] = 0;
             }
             printGalaxy();
-        }
+        } // handles movement. might rewrite to be recursive later
 
         private int length;
         private int height;
