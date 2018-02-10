@@ -17,41 +17,52 @@ namespace GameSim
         public Sector(char x, Random r)
         {
             displayToken = x;
-            if(x == ' ')
+            if(x == ' ' || x == '|' || x == '-')
             {
-                sectorType = "empty space";
-                psize = 0;
-            }
-            else if(x == '|' || x == '-')
-            {
-                sectorType = "the edge of space";
                 psize = 0;
             }
             else
             {
                 psize = sizeSet(20, 6, r);
-                if(psize > 15)
-                {
-                    sectorType = "a large planet";
-                }
-                else if(psize <= 5)
-                {
-                    sectorType = "a dwarf planet";
-                }
-                else if(psize <= 10)
-                {
-                    sectorType = "a small planet";
-                }
-                else
-                {
-                    sectorType = "a planet";
-                }
+                setType();
             }
             defaultToken = displayToken;
         }
         public void restore()
         {
             displayToken = defaultToken;
+        }
+        public void setType()
+        {
+            if (displayToken == ' ')
+            {
+                sectorType = "empty space";
+                psize = 0;
+            }
+            else if (psize == 0)
+            {
+                sectorType = "the edge of space";
+                psize = 0;
+            }
+            else if (psize > 15)
+            {
+                sectorType = "a large planet";
+            }
+            else if (psize <= 5)
+            {
+                sectorType = "a dwarf planet";
+                displayToken = defaultToken = '.';
+            }
+            else if (psize <= 10)
+            {
+                sectorType = "a small planet";
+                displayToken = defaultToken = 'o';
+            }
+            else
+            {
+                sectorType = "a planet";
+                displayToken = defaultToken = '0';
+            }
         }
 
         private int sizeSet(int rolls, int chanceoften, Random r)
