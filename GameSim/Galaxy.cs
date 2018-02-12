@@ -13,6 +13,9 @@ namespace GameSim
         {
             length = l;
             height = h;
+            var keythread = new System.Threading.Thread(keyGrab);
+            keythread.Start();
+            keythread.IsBackground = true;
             sectorLayout = new Sector[h, l];
             allSectors = new List<int[]>();
             for (int i = 0; i < height; i++)
@@ -266,6 +269,47 @@ namespace GameSim
             moving(ship[3], dist);
             return true;
         } // gameplay wrapper function, currently only handles motion input
+        public bool play(int a)
+        {
+            if (key.Key.ToString() == "UpArrow")
+            {
+                if(ship[1] == 0)
+                {
+                    return true;
+                }
+                ship[3] = 0;
+            }
+            else if (key.Key.ToString() == "LeftArrow")
+            {
+                if (ship[0] == 0)
+                {
+                    return true;
+                }
+                ship[3] = 1;
+            }
+            else if(key.Key.ToString() == "DownArrow")
+            {
+                if (ship[1] == height - 1)
+                {
+                    return true;
+                }
+                ship[3] = 2;
+            }
+            else if (key.Key.ToString() == "RightArrow")
+            {
+                if (ship[0] == length - 1)
+                {
+                    return true;
+                }
+                ship[3] = 3;
+            }
+            else
+            {
+                return true;
+            }
+            moving(ship[3], 1);
+            return true;
+        } // currently under testing (key presses instead of commands)
         private void moving(int dir, int dist)
         {
             //for ship[3] 0 up, 1 left, 2 down, 3 right, defaults to 0
@@ -302,8 +346,20 @@ namespace GameSim
             printGalaxy();
         } // handles movement. might rewrite to be recursive later
 
+        //threading stuff, currently only used for key press retrieval
+        private void keyGrab()
+        {
+            for (; ; )
+            {
+                key = Console.ReadKey(true);
+                System.Threading.Thread.Sleep(25);
+                key = default(ConsoleKeyInfo);
+            }
+        }
+
         private int length;
         private int height;
+        public ConsoleKeyInfo key;
         private Sector[,] sectorLayout; // list of all sectors; long, lat
         public List<int[]> allSectors; // list of coordinates of all planets; lat, long
         public int[] ship; // lat, long, docked, direction

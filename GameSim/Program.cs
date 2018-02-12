@@ -14,9 +14,9 @@ namespace GameSim
             thisGal.printGalaxy();
             //thisGal.printSectors(); // DO NOT USE AT HIGH GALAXY SIZES
             Console.WriteLine("{0} planets total", thisGal.allSectors.Count()); // used for debug/testing
-            while (thisGal.play()) ; // loops game
+            
+            while (thisGal.play(4)) ; // loops game
         }
-
         static public Random r = new Random();
     }
 }
