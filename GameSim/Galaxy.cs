@@ -120,6 +120,7 @@ namespace GameSim
         // output display stuff
         public void printGalaxy()
         {
+            Console.Clear();
             int iInit = 0;
             int iTo = 0;
             int jInit = 0;
@@ -140,8 +141,8 @@ namespace GameSim
                 }
                 else if(iTo >= height)
                 {
-                    iInit = height - 49;
-                    iTo = height - 1;
+                    iInit = height - 48;
+                    iTo = height;
                 }
             }
             if (length <= 101)
@@ -160,8 +161,8 @@ namespace GameSim
                 }
                 else if (jTo >= length)
                 {
-                    jInit = length - 101;
-                    jTo = length - 1;
+                    jInit = length - 100;
+                    jTo = length;
                 }
             }
             for(int j = jInit; j < jTo+2; j++){

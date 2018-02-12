@@ -18,13 +18,14 @@ namespace GameSim
         public Sector(char x)
         {
             displayToken = x;
-            if(x == ' ' || x == '|' || x == '-')
+            if(x == '|' || x == '-')
             {
                 psize = 0;
+                sectorType = "the edge of space";
             }
             else
             {
-                psize = sizeSet(20, 4);
+                psize = sizeSet(20, 5);
                 setType();
                 planetMap();
             }
