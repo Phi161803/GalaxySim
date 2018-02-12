@@ -13,9 +13,7 @@ namespace GameSim
         {
             length = l;
             height = h;
-            var keythread = new System.Threading.Thread(keyGrab);
-            keythread.Start();
-            keythread.IsBackground = true;
+            ThreadInit();
             sectorLayout = new Sector[h, l];
             allSectors = new List<int[]>();
             for (int i = 0; i < height; i++)
@@ -38,6 +36,15 @@ namespace GameSim
             ship = new int[4]; // lat, long, docked, direction
             galGen();
         } // constructor, generates map + borders, other default info
+        private void ThreadInit()
+        {
+            var keyThread = new System.Threading.Thread(keyGrab);
+            keyThread.Start();
+            keyThread.IsBackground = true;
+            var stringThread = new System.Threading.Thread(stringGrab);
+            stringThread.Start();
+            stringThread.IsBackground = true;
+        } // initializes threads
         private void galGen()
         {
             int init = (int)Math.Ceiling((double)length * height / 400);
@@ -224,7 +231,7 @@ namespace GameSim
         public bool play()
         {
             //for ship[3] 0 up, 1 left, 2 down, 3 right, defaults to 0
-            string input = Console.ReadLine().ToLower();
+            string input = userInput.ToLower();
             string[] move = input.Split(' ');
             int dist = 1;
             if (move.Length > 1) {
@@ -346,7 +353,7 @@ namespace GameSim
             printGalaxy();
         } // handles movement. might rewrite to be recursive later
 
-        //threading stuff, currently only used for key press retrieval
+        //threading stuff, mostly user input
         private void keyGrab()
         {
             for (; ; )
@@ -356,10 +363,20 @@ namespace GameSim
                 key = default(ConsoleKeyInfo);
             }
         }
+        private void stringGrab()
+        {
+            for (; ; )
+            {
+                userInput = Console.ReadLine();
+                System.Threading.Thread.Sleep(25);
+                userInput = default(string);
+            }
+        }
 
         private int length;
         private int height;
-        public ConsoleKeyInfo key;
+        private ConsoleKeyInfo key;
+        private string userInput;
         private Sector[,] sectorLayout; // list of all sectors; long, lat
         public List<int[]> allSectors; // list of coordinates of all planets; lat, long
         public int[] ship; // lat, long, docked, direction
