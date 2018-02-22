@@ -44,6 +44,7 @@ namespace GameSim
             linkMin = 2;
             linkMax = 5;
             linkTry = 20;
+            checkDrop = 2;
         }
         private void ThreadInit()
         {
@@ -149,20 +150,20 @@ namespace GameSim
                     {
                         continue;
                     }
-                    if (Program.r.Next(0, diagDist/2) > Program.SqDist(allPlanets[i].latitude, allPlanets[trys].latitude, allPlanets[i].longitude, allPlanets[trys].longitude))
+                    if (Program.r.Next(0, diagDist/checkDrop) > Program.SqDist(allPlanets[i].latitude, allPlanets[trys].latitude, allPlanets[i].longitude, allPlanets[trys].longitude))
                     {
                         makeLink(i, trys);
                     }
                 }
             }
-        }
+        } // makes hyperlanes between planets
         private void makeLink(int first, int second)
         {
             sectorLayout[allPlanets[first].longitude, allPlanets[first].latitude].Links.Add(allPlanets[second]);
             allPlanets[first].linkCount++;
             sectorLayout[allPlanets[second].longitude, allPlanets[second].latitude].Links.Add(allPlanets[first]);
             allPlanets[second].linkCount++;
-        }
+        } // actually makes the hyperlane
 
         // output display stuff
         public void printGalaxy()
@@ -467,7 +468,7 @@ namespace GameSim
             }
         }
 
-        private int length, height, diagDist;
+        private int length, height, diagDist, checkDrop;
         private int linkMin, linkMax, linkTry;
         private ConsoleKeyInfo key;
         private string userInput;
