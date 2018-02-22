@@ -13,10 +13,23 @@ namespace GameSim
             Galaxy thisGal = new Galaxy(1000, 1000); // length, height of galaxy
             thisGal.printGalaxy();
             //thisGal.printSectors(); // DO NOT USE AT HIGH GALAXY SIZES
-            Console.WriteLine("{0} planets total", thisGal.allSectors.Count()); // used for debug/testing
+            Console.WriteLine("{0} planets total", thisGal.allPlanets.Count()); // used for debug/testing
             
-            while (thisGal.play(4)) ; // loops game
+            while (thisGal.play(4.0)) ; // loops game
         }
         static public Random r = new Random();
+
+        static public int Round100(int i)
+        {
+            i = (int)Math.Ceiling((double)i / 100);
+            i = i * 100;
+            return i;
+        }
+        static public double SqDist(int l1, int l2, int h1, int h2)
+        {
+            int i = (l2 - l1) * (l2 - l1) + (h2 - h1) * (h2 - h1);
+            double d = Math.Sqrt(i);
+            return d;
+        }
     }
 }

@@ -11,44 +11,53 @@ namespace GameSim
         // initial construction stuff, constructor and called-by-constructor
         public Galaxy(int l, int h)
         {
-            length = l;
-            height = h;
+            StatInit(l, h);
             ThreadInit();
-            sectorLayout = new Sector[h, l];
-            allSectors = new List<int[]>();
             for (int i = 0; i < height; i++)
             {
                 for (int j = 0; j < length; j++)
                 {
                     if (i == 0 || i == height - 1)
                     {
-                        sectorLayout[i, j] = new Sector('-');
+                        sectorLayout[i, j] = new Sector('-', i, j);
                     }
-                    else if(j == 0 || j == length - 1)
+                    else if (j == 0 || j == length - 1)
                     {
-                        sectorLayout[i, j] = new Sector('|');
-                    } else
+                        sectorLayout[i, j] = new Sector('|', i, j);
+                    }
+                    else
                     {
-                        sectorLayout[i, j] = new Sector(' ');
+                        sectorLayout[i, j] = new Sector(' ', i, j);
                     }
                 }
             } //initial decl
-            ship = new int[4]; // lat, long, docked, direction
+            ship = new Player(); // lat, long, docked, direction
             galGen();
         } // constructor, generates map + borders, other default info
+        private void StatInit(int l, int h)
+        {
+            length = l;
+            height = h;
+            diagDist = Program.Round100(l * h);
+            sectorLayout = new Sector[h, l];
+            allPlanets = new List<Sector>();
+            linkMin = 2;
+            linkMax = 5;
+            linkTry = 20;
+        }
         private void ThreadInit()
         {
             var keyThread = new System.Threading.Thread(keyGrab);
             keyThread.Start();
             keyThread.IsBackground = true;
-            var stringThread = new System.Threading.Thread(stringGrab);
+            /*var stringThread = new System.Threading.Thread(stringGrab);
             stringThread.Start();
-            stringThread.IsBackground = true;
+            stringThread.IsBackground = true;*/
         } // initializes threads
         private void galGen()
         {
             int init = (int)Math.Ceiling((double)length * height / 400);
-            int roll = 3*init;
+            int roll = 3 * init;
             int decr = 2;
             //Random r = new Random();
             int a, b;
@@ -58,8 +67,8 @@ namespace GameSim
                 a = Program.r.Next(1, height - 1);
                 if (!surrounded(a, b))
                 {
-                    sectorLayout[a, b] = new Sector('O');
-                    allSectors.Add(new int[2] { b, a }); //lat, long
+                    sectorLayout[a, b] = new Sector('O', a, b);
+                    allPlanets.Add(sectorLayout[a, b]); //lat, long
                     count++;
                 }
             } // first passthrough of planet gen, always generates [init] number of planets
@@ -74,17 +83,17 @@ namespace GameSim
                 a = Program.r.Next(1, height - 1);
                 if (!surrounded(a, b))
                 {
-                    sectorLayout[a, b] = new Sector('O');
-                    allSectors.Add(new int[2] { b, a }); //lat, long
+                    sectorLayout[a, b] = new Sector('O', a, b);
+                    allPlanets.Add(sectorLayout[a, b]); //lat, long
                     roll = roll - decr;
                 }
             } // second passthrough of planet gen, 1/[roll] chance of breaking, else makes planet and decreases [roll]
-            ship[0] = allSectors[0][0]; //lat
-            ship[1] = allSectors[0][1]; //long
-            sectorLayout[ship[1], ship[0]].displayToken = '@';
-            ship[2] = 1; //docked
-            ship[3] = 0;
+            ship.here = allPlanets[0];
+            sectorLayout[ship.here.longitude, ship.here.latitude].displayToken = '@';
+            ship.docked = true; //docked
+            ship.direction = 0;
             //ship always starts docked at first generated sector
+            planetLink();
         } // populates map with planets
         private bool surrounded(int a, int b)
         {
@@ -92,40 +101,68 @@ namespace GameSim
             {
                 return true;
             }
-            if (sectorLayout[a-1, b].displayToken != ' ')
+            if (sectorLayout[a - 1, b].displayToken != ' ')
             {
                 return true;
             }
-            if (sectorLayout[a+1, b].displayToken != ' ')
+            if (sectorLayout[a + 1, b].displayToken != ' ')
             {
                 return true;
             }
-            if (sectorLayout[a, b-1].displayToken != ' ')
+            if (sectorLayout[a, b - 1].displayToken != ' ')
             {
                 return true;
             }
-            if (sectorLayout[a-1, b-1].displayToken != ' ')
+            if (sectorLayout[a - 1, b - 1].displayToken != ' ')
             {
                 return true;
             }
-            if (sectorLayout[a+1, b-1].displayToken != ' ')
+            if (sectorLayout[a + 1, b - 1].displayToken != ' ')
             {
                 return true;
             }
-            if (sectorLayout[a, b+1].displayToken != ' ')
+            if (sectorLayout[a, b + 1].displayToken != ' ')
             {
                 return true;
             }
-            if (sectorLayout[a-1, b+1].displayToken != ' ')
+            if (sectorLayout[a - 1, b + 1].displayToken != ' ')
             {
                 return true;
             }
-            if (sectorLayout[a+1, b+1].displayToken != ' ')
+            if (sectorLayout[a + 1, b + 1].displayToken != ' ')
             {
                 return true;
             }
             return false;
         } // checks if potential planet location has any nearby planets
+        private void planetLink()
+        {
+            for (int i = 0; i < allPlanets.Count; i++)
+            {
+                int j = 0;
+                int trys;
+                while (allPlanets[i].linkCount < linkMax && (j++ >= linkTry || allPlanets[i].linkCount < linkMin))
+                {
+                    //tryLink(sectorLayout[allPlanets[i][1], allPlanets[i][0]]);
+                    trys = Program.r.Next(0, allPlanets.Count);
+                    if (i == trys || allPlanets[trys].linkCount >= linkMax)
+                    {
+                        continue;
+                    }
+                    if (Program.r.Next(0, diagDist/2) > Program.SqDist(allPlanets[i].latitude, allPlanets[trys].latitude, allPlanets[i].longitude, allPlanets[trys].longitude))
+                    {
+                        makeLink(i, trys);
+                    }
+                }
+            }
+        }
+        private void makeLink(int first, int second)
+        {
+            sectorLayout[allPlanets[first].longitude, allPlanets[first].latitude].Links.Add(allPlanets[second]);
+            allPlanets[first].linkCount++;
+            sectorLayout[allPlanets[second].longitude, allPlanets[second].latitude].Links.Add(allPlanets[first]);
+            allPlanets[second].linkCount++;
+        }
 
         // output display stuff
         public void printGalaxy()
@@ -135,21 +172,21 @@ namespace GameSim
             int iTo = 0;
             int jInit = 0;
             int jTo = 0;
-            if(height <= 49)
+            if (height <= 49)
             {
                 iInit = 0;
                 iTo = height;
             }
             else
             {
-                iInit = ship[1] - 24;
-                iTo = ship[1] + 24;
-                if(iInit < 0)
+                iInit = ship.here.longitude - 24;
+                iTo = ship.here.longitude + 24;
+                if (iInit < 0)
                 {
                     iInit = 0;
                     iTo = 48;
                 }
-                else if(iTo >= height)
+                else if (iTo >= height)
                 {
                     iInit = height - 48;
                     iTo = height;
@@ -162,8 +199,8 @@ namespace GameSim
             }
             else
             {
-                jInit = ship[0] - 50;
-                jTo = ship[0] + 50;
+                jInit = ship.here.latitude - 50;
+                jTo = ship.here.latitude + 50;
                 if (jInit < 0)
                 {
                     jInit = 0;
@@ -175,7 +212,8 @@ namespace GameSim
                     jTo = length;
                 }
             }
-            for(int j = jInit; j < jTo+2; j++){
+            for (int j = jInit; j < jTo + 2; j++)
+            {
                 Console.Write('-');
             }
             Console.WriteLine();
@@ -184,11 +222,11 @@ namespace GameSim
                 Console.Write('|');
                 for (int j = jInit; j < jTo; j++)
                 {
-                    Console.Write(sectorLayout[i,j].displayToken);
+                    Console.Write(sectorLayout[i, j].displayToken);
                 }
                 Console.WriteLine('|');
             }
-            for (int j = jInit; j < jTo+2; j++)
+            for (int j = jInit; j < jTo + 2; j++)
             {
                 Console.Write('-');
             }
@@ -197,16 +235,16 @@ namespace GameSim
         } // prints map of surrounding galactic map
         public void printSectors()
         {
-            for(int i = 0; i < allSectors.Count(); i++)
+            for (int i = 0; i < allPlanets.Count(); i++)
             {
-                Console.WriteLine("{0} located at ({1}, {2}) (size: {3})", sectorLayout[allSectors[i][1], allSectors[i][0]].sectorType, allSectors[i][0], allSectors[i][1], sectorLayout[allSectors[i][1], allSectors[i][0]].psize);
+                Console.WriteLine("{0} located at ({1}, {2}) (size: {3})", allPlanets[i].sectorType, allPlanets[i].latitude, allPlanets[i].longitude, allPlanets[i].psize);
             }
-            Console.WriteLine("{0} planets total", allSectors.Count());
+            Console.WriteLine("{0} planets total", allPlanets.Count());
         } // prints full list of all generated planets (DO NOT USE AT LARGE MAP SIZES)
         public void printHere()
         {
             Console.Write("You are ");
-            if (ship[2] == 1)
+            if (ship.docked)
             {
                 Console.Write("orbiting ");
             }
@@ -214,144 +252,200 @@ namespace GameSim
             {
                 Console.Write("located at ");
             }
-            Console.Write("{0} at ({1}, {2})", sectorLayout[ship[1], ship[0]].sectorType, ship[0], ship[1]);
-            if(ship[2] == 0)
+            Console.Write("{0} at ({1}, {2})", ship.here.sectorType, ship.here.latitude, ship.here.longitude);
+            if (!ship.docked)
             {
                 Console.WriteLine();
                 return;
             }
-            if(ship[2] == 1)
+            Console.WriteLine(" [size: {0}]", ship.here.psize);
+            ship.here.planetPrint();
+            Console.WriteLine();
+            for (int i = 0; i < ship.here.linkCount; i++)
             {
-                Console.WriteLine(" [size: {0}]", sectorLayout[ship[1], ship[0]].psize);
+                Console.WriteLine("[{0}] Hyperlane to {1} at ({2}, {3})", i + 1, ship.here.Links[i].sectorType, ship.here.Links[i].latitude, ship.here.Links[i].longitude);
             }
-            sectorLayout[ship[1], ship[0]].planetPrint();
         } // prints current location information, including planet map if at a planet
 
         // gameplay stuff
         public bool play()
         {
-            //for ship[3] 0 up, 1 left, 2 down, 3 right, defaults to 0
+            //for ship.direction 0 up, 1 left, 2 down, 3 right, defaults to 0
             string input = userInput.ToLower();
             string[] move = input.Split(' ');
             int dist = 1;
-            if (move.Length > 1) {
+            if (move.Length > 1)
+            {
                 int.TryParse(move[1], out dist);
             }
             if (move[0][0] == 'l' || move[0][0] == 'w')
             {
-                if(ship[0] - dist <= 0)
+                if (ship.here.latitude - dist <= 0)
                 {
                     return true;
                 }
-                ship[3] = 1;
+                ship.direction = 1;
             }
             else if (move[0][0] == 'r' || move[0][0] == 'e')
             {
-                if (ship[0] + dist >= length)
+                if (ship.here.latitude + dist >= length)
                 {
                     return true;
                 }
-                ship[3] = 3;
+                ship.direction = 3;
             }
-            else if(move[0][0] == 'u' || move[0][0] == 'n')
+            else if (move[0][0] == 'u' || move[0][0] == 'n')
             {
-                if (ship[1] - dist <= 0)
+                if (ship.here.longitude - dist <= 0)
                 {
                     return true;
                 }
-                ship[3] = 0;
+                ship.direction = 0;
             }
             else if (move[0][0] == 'd' || move[0][0] == 's')
             {
-                if (ship[1] + dist >= height)
+                if (ship.here.longitude + dist >= height)
                 {
                     return true;
                 }
-                ship[3] = 2;
+                ship.direction = 2;
             }
             else
             {
                 return true;
             }
-            moving(ship[3], dist);
+            moving(ship.direction, dist);
             return true;
         } // gameplay wrapper function, currently only handles motion input
         public bool play(int a)
         {
             if (key.Key.ToString() == "UpArrow")
             {
-                if(ship[1] == 0)
+                if (ship.here.longitude == 0)
                 {
                     return true;
                 }
-                ship[3] = 0;
+                ship.direction = 0;
             }
             else if (key.Key.ToString() == "LeftArrow")
             {
-                if (ship[0] == 0)
+                if (ship.here.latitude == 0)
                 {
                     return true;
                 }
-                ship[3] = 1;
+                ship.direction = 1;
             }
-            else if(key.Key.ToString() == "DownArrow")
+            else if (key.Key.ToString() == "DownArrow")
             {
-                if (ship[1] == height - 1)
+                if (ship.here.longitude == height - 1)
                 {
                     return true;
                 }
-                ship[3] = 2;
+                ship.direction = 2;
             }
             else if (key.Key.ToString() == "RightArrow")
             {
-                if (ship[0] == length - 1)
+                if (ship.here.latitude == length - 1)
                 {
                     return true;
                 }
-                ship[3] = 3;
+                ship.direction = 3;
             }
             else
             {
                 return true;
             }
-            moving(ship[3], 1);
+            key = default(ConsoleKeyInfo);
+            moving(ship.direction, 1);
             return true;
-        } // currently under testing (key presses instead of commands)
-        private void moving(int dir, int dist)
+        } // handles arrow key presses instead of commands
+        public bool play(double a)
         {
-            //for ship[3] 0 up, 1 left, 2 down, 3 right, defaults to 0
-            sectorLayout[ship[1], ship[0]].restore();
-            if(dir == 0)
+            if(key.KeyChar - '0' <= ship.here.linkCount && key.KeyChar - '0' > 0)
             {
-                ship[1] = ship[1] - dist;
-                sectorLayout[ship[1], ship[0]].displayToken = '^';
+                ship.here.restore();
+                ship.here = ship.here.Links[key.KeyChar - '1'];
+                ship.here.displayToken = '@';
+                printGalaxy();
+                key = default(ConsoleKeyInfo);
+                return true;
             }
-            else if (dir == 1)
+            else if (key.Key.ToString() == "UpArrow")
             {
-                ship[0] = ship[0] - dist;
-                sectorLayout[ship[1], ship[0]].displayToken = '<';
+                if (ship.here.longitude == 0)
+                {
+                    return true;
+                }
+                ship.direction = 0;
             }
-            else if (dir == 2)
+            else if (key.Key.ToString() == "LeftArrow")
             {
-                ship[1] = ship[1] + dist;
-                sectorLayout[ship[1], ship[0]].displayToken = 'v';
+                if (ship.here.latitude == 0)
+                {
+                    return true;
+                }
+                ship.direction = 1;
             }
-            else if (dir == 3)
+            else if (key.Key.ToString() == "DownArrow")
             {
-                ship[0] = ship[0] + dist;
-                sectorLayout[ship[1], ship[0]].displayToken = '>';
+                if (ship.here.longitude == height - 1)
+                {
+                    return true;
+                }
+                ship.direction = 2;
             }
-            if (sectorLayout[ship[1], ship[0]].defaultToken != ' ' && sectorLayout[ship[1], ship[0]].defaultToken != '|' && sectorLayout[ship[1], ship[0]].defaultToken != '-')
+            else if (key.Key.ToString() == "RightArrow")
             {
-                sectorLayout[ship[1], ship[0]].displayToken = '@';
-                ship[2] = 1;
+                if (ship.here.latitude == length - 1)
+                {
+                    return true;
+                }
+                ship.direction = 3;
             }
             else
             {
-                ship[2] = 0;
+                return true;
+            }
+            key = default(ConsoleKeyInfo);
+            moving(ship.direction, 1);
+            return true;
+        } //handles hyperlane movement and arrow keys
+        
+        private void moving(int dir, int dist)
+        {
+            //for ship.direction 0 up, 1 left, 2 down, 3 right, defaults to 0
+            ship.here.restore();
+            if (dir == 0)
+            {
+                ship.here = sectorLayout[ship.here.longitude - dist, ship.here.latitude];
+                ship.here.displayToken = '^';
+            }
+            else if (dir == 1)
+            {
+                ship.here = sectorLayout[ship.here.longitude, ship.here.latitude - dist];
+                ship.here.displayToken = '<';
+            }
+            else if (dir == 2)
+            {
+                ship.here = sectorLayout[ship.here.longitude + dist, ship.here.latitude];
+                ship.here.displayToken = 'v';
+            }
+            else if (dir == 3)
+            {
+                ship.here = sectorLayout[ship.here.longitude, ship.here.latitude + dist];
+                ship.here.displayToken = '>';
+            }
+            if (ship.here.defaultToken != ' ' && ship.here.defaultToken != '|' && ship.here.defaultToken != '-')
+            {
+                ship.here.displayToken = '@';
+                ship.docked = true;
+            }
+            else
+            {
+                ship.docked = false;
             }
             printGalaxy();
-        } // handles movement. might rewrite to be recursive later
+        } // handles basic movement. might rewrite to be recursive later
 
         //threading stuff, mostly user input
         private void keyGrab()
@@ -359,8 +453,8 @@ namespace GameSim
             for (; ; )
             {
                 key = Console.ReadKey(true);
-                System.Threading.Thread.Sleep(25);
-                key = default(ConsoleKeyInfo);
+                //System.Threading.Thread.Sleep(40);
+                //key = default(ConsoleKeyInfo);
             }
         }
         private void stringGrab()
@@ -373,12 +467,12 @@ namespace GameSim
             }
         }
 
-        private int length;
-        private int height;
+        private int length, height, diagDist;
+        private int linkMin, linkMax, linkTry;
         private ConsoleKeyInfo key;
         private string userInput;
         private Sector[,] sectorLayout; // list of all sectors; long, lat
-        public List<int[]> allSectors; // list of coordinates of all planets; lat, long
-        public int[] ship; // lat, long, docked, direction
+        public List<Sector> allPlanets; // list of all planets
+        public Player ship;
     }
 }
