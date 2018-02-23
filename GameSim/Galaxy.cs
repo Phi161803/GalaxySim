@@ -38,13 +38,16 @@ namespace GameSim
         {
             length = l;
             height = h;
-            diagDist = Program.Round100(l * h);
+            diagDist = Program.RoundTo(l * h, 100);
             sectorLayout = new Sector[h, l];
             allPlanets = new List<Sector>();
             linkMin = 2;
             linkMax = 5;
             linkTry = 20;
             checkDrop = 2;
+            tickTime = 100;
+            laneDecayTick = 20;
+            laneDecayUse = 5;
         }
         private void ThreadInit()
         {
@@ -55,6 +58,7 @@ namespace GameSim
             stringThread.Start();
             stringThread.IsBackground = true;*/
         } // initializes threads
+
         private void galGen()
         {
             int init = (int)Math.Ceiling((double)length * height / 400);
@@ -141,27 +145,30 @@ namespace GameSim
             for (int i = 0; i < allPlanets.Count; i++)
             {
                 int j = 0;
-                int trys;
                 while (allPlanets[i].linkCount < linkMax && (j++ >= linkTry || allPlanets[i].linkCount < linkMin))
                 {
-                    //tryLink(sectorLayout[allPlanets[i][1], allPlanets[i][0]]);
-                    trys = Program.r.Next(0, allPlanets.Count);
-                    if (i == trys || allPlanets[trys].linkCount >= linkMax)
-                    {
-                        continue;
-                    }
-                    if (Program.r.Next(0, diagDist/checkDrop) > Program.SqDist(allPlanets[i].latitude, allPlanets[trys].latitude, allPlanets[i].longitude, allPlanets[trys].longitude))
-                    {
-                        makeLink(i, trys);
-                    }
+                    tryLink(i);
                 }
             }
         } // makes hyperlanes between planets
+        private void tryLink(int i)
+        {
+            Sector P = allPlanets[i];
+            int trys = Program.r.Next(0, allPlanets.Count);
+            if (i == trys || allPlanets[trys].linkCount >= linkMax)
+            {
+                return;
+            }
+            if (Program.r.Next(0, diagDist / checkDrop) > Program.SqDist(allPlanets[i], allPlanets[trys]))
+            {
+                makeLink(i, trys);
+            }
+        }
         private void makeLink(int first, int second)
         {
-            sectorLayout[allPlanets[first].longitude, allPlanets[first].latitude].Links.Add(allPlanets[second]);
+            allPlanets[first].Links.Add(new Lane(allPlanets[first], allPlanets[second]));
             allPlanets[first].linkCount++;
-            sectorLayout[allPlanets[second].longitude, allPlanets[second].latitude].Links.Add(allPlanets[first]);
+            allPlanets[second].Links.Add(allPlanets[first].Links[allPlanets[first].linkCount-1]);
             allPlanets[second].linkCount++;
         } // actually makes the hyperlane
 
@@ -264,7 +271,16 @@ namespace GameSim
             Console.WriteLine();
             for (int i = 0; i < ship.here.linkCount; i++)
             {
-                Console.WriteLine("[{0}] Hyperlane to {1} at ({2}, {3})", i + 1, ship.here.Links[i].sectorType, ship.here.Links[i].latitude, ship.here.Links[i].longitude);
+                Console.Write("[{0}] Hyperlane to ", i + 1);
+                if (ship.here.Links[i].end2 == ship.here)
+                {
+                    Console.WriteLine("{0} at ({1}, {2})", ship.here.Links[i].end1.sectorType, ship.here.Links[i].end1.latitude, ship.here.Links[i].end1.longitude);
+                }
+                else
+                {
+                    Console.WriteLine("{0} at ({1}, {2})", ship.here.Links[i].end2.sectorType, ship.here.Links[i].end2.latitude, ship.here.Links[i].end2.longitude);
+                }
+
             }
         } // prints current location information, including planet map if at a planet
 
@@ -364,11 +380,25 @@ namespace GameSim
         {
             if(key.KeyChar - '0' <= ship.here.linkCount && key.KeyChar - '0' > 0)
             {
+                char hold = key.KeyChar;
                 ship.here.restore();
-                ship.here = ship.here.Links[key.KeyChar - '1'];
+                time += ship.here.Links[hold - '1'].time;
+                if (Program.r.Next(0, laneDecayUse) == 0)
+                {
+                    ship.here.Links[hold - '1'].decay++;
+                }
+                if (ship.here.Links[hold - '1'].end1 == ship.here)
+                {
+                    ship.here = ship.here.Links[hold - '1'].end2;
+                }
+                else
+                {
+                    ship.here = ship.here.Links[hold - '1'].end1;
+                }
                 ship.here.displayToken = '@';
                 printGalaxy();
                 key = default(ConsoleKeyInfo);
+                checkDecay();
                 return true;
             }
             else if (key.Key.ToString() == "UpArrow")
@@ -409,6 +439,10 @@ namespace GameSim
             }
             key = default(ConsoleKeyInfo);
             moving(ship.direction, 1);
+            if (time > tickTime)
+            {
+                Tick();
+            }
             return true;
         } //handles hyperlane movement and arrow keys
         
@@ -445,8 +479,49 @@ namespace GameSim
             {
                 ship.docked = false;
             }
+            time += dist;
             printGalaxy();
         } // handles basic movement. might rewrite to be recursive later
+
+        private void Tick()
+        {
+            time = time - tickTime;
+            for(int i = 0; i < allPlanets.Count; i++)
+            {
+                if(allPlanets[i].linkCount < linkMax)
+                {
+                    tryLink(i);
+                }
+                for(int j = 0; j < allPlanets[i].linkCount; j++)
+                {
+                    if(Program.r.Next(0, laneDecayTick) == 0)
+                    {
+                        allPlanets[i].Links[j].decay++;
+                        if(allPlanets[i].Links[j].decay >= laneDecayLimit)
+                        {
+                            breakLink(allPlanets[i].Links[j]);
+                        }
+                    }
+                }
+            }
+        }
+        private void checkDecay()
+        {
+            for(int i = 0; i < ship.here.linkCount; i++)
+            {
+                if(ship.here.Links[i].decay > laneDecayLimit)
+                {
+                    breakLink(ship.here.Links[i]);
+                }
+            }
+        }
+        private void breakLink(Lane L)
+        {
+            L.end1.Links.Remove(L);
+            L.end1.linkCount--;
+            L.end2.Links.Remove(L);
+            L.end2.linkCount--;
+        }
 
         //threading stuff, mostly user input
         private void keyGrab()
@@ -469,7 +544,8 @@ namespace GameSim
         }
 
         private int length, height, diagDist, checkDrop;
-        private int linkMin, linkMax, linkTry;
+        private int linkMin, linkMax, linkTry, laneDecayTick, laneDecayUse, laneDecayLimit;
+        private int time, tickTime;
         private ConsoleKeyInfo key;
         private string userInput;
         private Sector[,] sectorLayout; // list of all sectors; long, lat

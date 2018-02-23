@@ -35,7 +35,7 @@ namespace GameSim
         } //sets sector based on input char
         public void setType()
         {
-            Links = new List<Sector>();
+            Links = new List<Lane>();
             if (displayToken == ' ')
             {
                 sectorType = "empty space";
@@ -131,7 +131,7 @@ namespace GameSim
         public string sectorType { get; private set; }
         public int psize { get; private set; }
         private char[,] map;
-        public List<Sector> Links;
+        public List<Lane> Links;
         public int linkCount;
         public int longitude, latitude;
         //public int[] location { get; private set; }

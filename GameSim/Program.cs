@@ -19,15 +19,21 @@ namespace GameSim
         }
         static public Random r = new Random();
 
-        static public int Round100(int i)
+        static public int RoundTo(int inp, int by)
         {
-            i = (int)Math.Ceiling((double)i / 100);
-            i = i * 100;
-            return i;
+            inp = (int)Math.Ceiling((double)inp / by);
+            inp = inp * by;
+            return inp;
         }
         static public double SqDist(int l1, int l2, int h1, int h2)
         {
             int i = (l2 - l1) * (l2 - l1) + (h2 - h1) * (h2 - h1);
+            double d = Math.Sqrt(i);
+            return d;
+        }
+        static public double SqDist(Sector a, Sector b)
+        {
+            int i = (a.latitude - b.latitude) * (a.latitude - b.latitude) + (a.longitude - b.longitude) * (a.longitude - b.longitude);
             double d = Math.Sqrt(i);
             return d;
         }
