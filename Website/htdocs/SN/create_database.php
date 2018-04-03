@@ -68,6 +68,7 @@ if ($conn->connect_error) {
 	planet_stock INT(10) UNSIGNED NOT NULL,
 	planet_holding INT(10) UNSIGNED NOT NULL,
 	planet_units INT(10) UNSIGNED NOT NULL,
+	planet_hidden INT(10) UNSIGNED NOT NULL,
 	reg_date TIMESTAMP
 	)";
 
@@ -97,7 +98,56 @@ if ($conn->connect_error) {
 		echo "<BR>Error creating table: " . $conn->error;
 	}
 	
+//STARLANE TABLE
+	$sql = "CREATE TABLE starlane (
+	slid INT(10) UNSIGNED PRIMARY KEY,
+	fPlanet INT(10) NOT NULL,
+	flocX INT(10) NOT NULL,
+	flocY INT(10) NOT NULL,
+	sPlanet INT(10) NOT NULL,
+	slocX INT(10) NOT NULL,
+	slocY INT(10) NOT NULL,
+	starlane_units INT(10) UNSIGNED NOT NULL,
+	starlane_hidden INT(10) UNSIGNED NOT NULL,
+	reg_date TIMESTAMP
+	)";
+	
+	if ($conn->query($sql) === TRUE) {
+		echo "<BR>Table starlane created successfully. ";
+	} else {
+		echo "<BR>Error creating table: " . $conn->error;
+	}
+	
+	//starlane_units
+	$sql = "CREATE TABLE starlane_units (
+	slid INT(10) UNSIGNED NOT NULL,
+	uid INT(10) UNSIGNED NOT NULL,
+	direction BOOL NOT NULL,
+	percent INT(100) UNSIGNED NOT NULL,
+	reg_date TIMESTAMP
+	)";
+	//direction 1 means from fplanet, 0 means from splanet
+	//percent is how far down they have gone.
 
+	if ($conn->query($sql) === TRUE) {
+		echo "<BR>Table starlane_units created successfully. ";
+	} else {
+		echo "<BR>Error creating table: " . $conn->error;
+	}
+	
+	//starlane_hidden KEEPS TRACK OF WHO CAN SEE ROUTE
+	$sql = "CREATE TABLE starlane_hidden (
+	pid INT(10) UNSIGNED NOT NULL,
+	hid INT(10) UNSIGNED NOT NULL,
+	hidden BOOL NOT NULL,
+	)";
+	//0 for hidden, 1 for visible
+	
+	if ($conn->query($sql) === TRUE) {
+		echo "<BR>Table starlane_hidden created successfully. ";
+	} else {
+		echo "<BR>Error creating table: " . $conn->error;
+	}
 
 
 //HOUSE DATA
@@ -317,7 +367,29 @@ if ($conn->connect_error) {
 		echo "<BR>Error: " . $sql . "<br>" . $conn->error;
 	}
 
+//TEST DATA for STARLANE
+	$sql = "INSERT INTO starlane (slid, fPlanet, flocX, flocY, sPlanet, slocX, slocY, starlane_units, starlane_hidden)
+	VALUES (1, 1, 5, 0, 2, 14, 15, 1, 1)";
 
+	if ($conn->query($sql) === TRUE) {
+		echo "<BR>New Holding created successfully";
+	} else {
+		echo "<BR>Error: " . $sql . "<br>" . $conn->error;
+	}
+	
+	
+	$sql = "INSERT INTO starlane (slid, fPlanet, flocX, flocY, sPlanet, slocX, slocY, starlane_units, starlane_hidden)
+	VALUES (2, 1, 5, 0, 3, 0, 15, 2, 2)";
+	
+	if ($conn->query($sql) === TRUE) {
+		echo "<BR>New Holding created successfully";
+	} else {
+		echo "<BR>Error: " . $sql . "<br>" . $conn->error;
+	}
+
+
+	
+	
 //TEST DATA for character
 	$sql = "INSERT INTO actor (cid, name, birth, gender, health, preg, pregStart, descript, loc, owner, pos, intel, brawn, charisma, expMilitary, expAdmin)
 	VALUES (1, 'Jo Bob', 12600, 0, 10, 0, 0, 'Jo Bob was his name.', 1, 1, 1, 3, 4, 4, 3, 4)";

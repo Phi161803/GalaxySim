@@ -47,7 +47,6 @@ $result = $conn->query("SELECT name, locX, locY, size, terrain, secTerrain, desc
 $planet = $result->fetch_assoc();
 echo '<a href="planet_edit.php?varname=' . $pid . '">Edit Planet</a><br>';
 echo "<h1>" . $planet["name"] . "</h1>";
-
 echo "Type: A " . $planet["secTerrain"] . " " . $planet["terrain"] . " world." . "<br>";
 echo "Description: " . $planet["descript"] . "<br>";
 echo "<h2>Stats:</h2>";
@@ -58,7 +57,40 @@ echo "Mineral Deposits: " . $planet["minerals"] . "<br>";
 echo "Population Growth: " . $planet["popGrowth"] . "<br>";
 echo "Wealth: " . $planet["wealth"] . "<br>";
 echo "Education Level: " . $planet["eduLevel"] . "<br>";
+
+echo "<h2>Connecting Starlanes:</h2>";
+$lane = FALSE;
+$sql = "SELECT fplanet, splanet FROM starlane WHERE fplanet = $pid";
+$result = $conn->query($sql);
+if ($result->num_rows > 0) {
+    // output data of each row
+    while($row = $result->fetch_assoc()) {
+		$splaname = $row['splanet'];
+		$sql = "SELECT name FROM planet WHERE pid = $splaname";
+		$splanet = $conn->query($sql);
+		$row2 = $splanet->fetch_assoc();
+        echo 'Starlane to : ' . $row2["name"] . '<br>';
+    }
+} else {
+    $lane = TRUE;
+}
+
+$sql = "SELECT fplanet, splanet FROM starlane WHERE splanet = $pid";
+$result = $conn->query($sql);
+if ($result->num_rows > 0) {
+    // output data of each row
+    while($row = $result->fetch_assoc()) {
+		$splaname = $row['fplanet'];
+		$sql = "SELECT name FROM planet WHERE pid = $splaname";
+		$splanet = $conn->query($sql);
+		$row2 = $splanet->fetch_assoc();
+        echo 'Starlane to : ' . $row2["name"] . '<br>';
+    }
+} else {
+    if($lane == TRUE) {echo 'Error: No Lanes to Planet.';}
+}
 ?>
+
 
 
 <table>
@@ -107,37 +139,6 @@ else { echo "<BR>No Holdings."; }
 <!--MILITARY OVERVIEW SECTION -->
 <h2>Military Overview (To Be Done)</h2>
 
-
-
-
-
-
-Old Test code here just to make more text appears.
-<?php
-$sql = "SELECT hid, name, home FROM house";
-$result = $conn->query($sql);
-
-if ($result->num_rows > 0) {
-    // output data of each row
-    while($row = $result->fetch_assoc()) {
-        echo "<BR>id: " . $row["hid"]. " - Name: " . $row["name"]. " " . $row["home"];
-    }
-} else {
-    echo "<BR>0 results";
-}
-
-$sql = "SELECT hid, name, home FROM house WHERE hid = 2";
-$result = $conn->query($sql);
-
-if ($result->num_rows > 0) {
-    // output data of each row
-    while($row = $result->fetch_assoc()) {
-        echo "<BR>id: " . $row["hid"]. " - Name: " . $row["name"]. " " . $row["home"];
-    }
-} else {
-    echo "<BR>0 results";
-}
-?> 
 </tr>
 </td>
 </table>
