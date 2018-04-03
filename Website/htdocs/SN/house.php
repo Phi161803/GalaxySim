@@ -46,9 +46,12 @@ if ($conn->connect_error) {
 
 <?php //House Name
 $result = $conn->query("SELECT name FROM house WHERE hid = $hid");
-if ($result->num_rows > 0) { while($row = $result->fetch_assoc()) {echo "<h1>" . $row["name"] . "</h1>";}}
-else { echo "<h1>An Unknown House<BR></h1>";}
+if ($result->num_rows > 0) { while($row = $result->fetch_assoc()) {echo "<h1 id=name_val>" . $row["name"] . "</h1>";}}
+else { echo "<h1>An Unknown House.";}
 ?>
+<input type='button' class="edit_button" id="edit_button<?php echo $row['name'];?>" value="edit" onclick="edit_name('<?php echo $row['name'];?>');">
+
+
 
 <?php //Quote
 $result = $conn->query("SELECT quote FROM house WHERE hid = $hid");
@@ -62,7 +65,7 @@ else { echo "A house of few words.";}
 <td>
 <h2>Holding Overview</h2>
 <?php
-$holding = $conn->query("SELECT pid, hid, food, rawMat, energy, upgrade1, upgrade2, upgrade3, upgrade4 FROM planet_holding WHERE hid = 1");
+$holding = $conn->query("SELECT pid, hid, food, rawMat, energy, upgrade1, upgrade2, upgrade3, upgrade4 FROM planet_holding WHERE hid = $hid");
 $i = 1;
 $upgradeX = "upgrade" . $i;
 
@@ -76,7 +79,7 @@ if ($holding->num_rows > 0) {
         echo 
 			"<holding>
 				<ul style=\"list-style-type:none\">
-					<li>Planet: <a href=\"planet.php?varname=" . $row["pid"] . "\">" . $row2["name"] . "</a></li>" .
+					<li>Planet: <a href=\"/SN/planet/planet.php?varname=" . $row["pid"] . "\">" . $row2["name"] . "</a></li>" .
 					"<li>Food: " . $row["food"] . "</li>" .
 					"<li>Raw Materials: " . $row["rawMat"] . "</li>" .
 					"<li>Energy: " . $row["energy"] . "</li>";
@@ -91,21 +94,57 @@ if ($holding->num_rows > 0) {
 			"</holding>";
     }
 }
-else { echo "<BR>No Holdings."; }
+else { echo "No Holdings."; }
 ?>
 </tr>
 </td>
 
 <BR>
+
+
 <tr>
 <td>
+<h2>Character Overview</h2>
+<?php
+$actor = $conn->query("SELECT cid, name, birth, gender, health, preg, pregStart, descript, location, owner, pos, intel, brawn, charisma, expMilitary, expAdmin FROM actor WHERE owner = $hid");
+
+//$result = $conn->query($holding);
+if ($actor->num_rows > 0) {
+    // output data of each row
+    while($row = $actor->fetch_assoc()) {
+		$pid = $row["location"];
+		$pname = $conn->query("SELECT name FROM planet WHERE pid = $pid");
+		$row2 = $pname->fetch_assoc();
+        echo 
+			"<holding>
+				<ul style=\"list-style-type:none\">
+					<li>Name: <a href=\"actor.php?varname=" . $row["cid"] . "\">" . $row["name"] . "</a></li>" .
+					"<li>Age: " . ($row["birth"]/360) . " years old.</li>" .
+					"<li>Gender: " . (($row["gender"] == 0)?("male"):("female")) . "</li>" .
+					"<li>Health: " . $row["health"] . "</li>" .
+					"<li>Description: " . $row["descript"] . "</li>" .
+					"<li>Resides On: " . $row2["name"] . "</li>" .
+					"<li>Position: " . (($row["pos"] == 1)?("Head of House"):("None")) . " </li>" .
+					"<li>Strength: " . $row["brawn"] . "</li>" .
+					"<li>Intelligence: " . $row["intel"] . "</li>" .
+					"<li>Charisma: " . $row["charisma"] . "</li>" .
+					"<li>Miltiary Skill: " . $row["expMilitary"] . "</li>" .
+					"<li>Admin Skill: " . $row["expAdmin"] . "</li>";
+		echo	"</ul>" .
+			"</holding>";
+    }
+}
+else { echo "No Characters."; }
+?>
+</tr>
+</td>
+
+
+
 <!--MILITARY OVERVIEW SECTION -->
+<tr>
+<td>
 <h2>Military Overview (To Be Done)</h2>
-
-
-
-
-
 
 Old Test code here just to make more text appears.
 <?php

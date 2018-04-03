@@ -56,7 +56,9 @@ parent.document.getElementById("data_frame").src = page+x+a;
 
 <form method="get" action="create_house_submit.php" method="post">
 House Name: <input type="text" name="name"><br>
+
 Quote: <input type="text" name="quote"><br>
+
 Starting Planet:
 <input type="radio" name="planet"
 <?php if (isset($planet) && $planet==1) echo "checked";?>

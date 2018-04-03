@@ -40,7 +40,7 @@ if ($conn->connect_error) {
 <!--Extremely basic map, no controls as of yet-->
 <script>
 function goplanet(pid) {
-var x = "planet.php?varname=";
+var x = "/SN/planet/planet.php?varname=";
 //document.write(pid);
 parent.document.getElementById("data_frame").src = x+pid;
 }

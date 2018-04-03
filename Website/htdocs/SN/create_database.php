@@ -5,12 +5,7 @@
 
 <h1>Single Use Jump Start for Test Databases</h1>
 
-<?php
-echo "Hello World!";
-?>
-
-<BR>
-
+<?php echo "Hello World!"; ?>
 <?php
 $servername = "localhost";
 $username = "root";
@@ -55,7 +50,7 @@ if ($conn->connect_error) {
 //========================
 //PLANET TABLE
 	$sql = "CREATE TABLE planet (
-	pid INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+	pid INT(10) UNSIGNED PRIMARY KEY,
 	name VARCHAR(20) NOT NULL,
 	locX INT(10) NOT NULL,
 	locY INT(10) NOT NULL,
@@ -187,7 +182,54 @@ if ($conn->connect_error) {
 		echo "<BR>Error creating table: " . $conn->error;
 	}
 
+//CHARACTER TABLE
+	$sql = "CREATE TABLE actor (
+	cid INT(10) UNSIGNED PRIMARY KEY,
+	name VARCHAR(50) NOT NULL,
+	birth INT(10) NOT NULL,
+	gender BOOL NOT NULL,
+	health INT(10) NOT NULL,
+	preg INT(10) NOT NULL,
+	pregStart INT(10) NOT NULL,
+	descript VARCHAR(100) NOT NULL,
+	location INT(10) NOT NULL,
+	owner INT(10) NOT NULL,
+	pos INT(100) NOT NULL,
+	intel INT(10) NOT NULL,
+	brawn INT(10) NOT NULL,
+	charisma INT(10) NOT NULL,
+	expMilitary INT(10) NOT NULL,
+	expAdmin INT(10) NOT NULL,
+	reg_date TIMESTAMP
+	)";
+	//gender 1 FEMALE, 0 MALE
+	//birth currently being used as a straight age number, until dating system is implemented.
+	//preg 0 NOT PREG, cid IF PREG
+	//pos 1 HEAD, LIST THESE LATER
+	
+	
+	if ($conn->query($sql) === TRUE) {
+		echo "<BR>Table character created successfully.";
+	} else {
+		echo "<BR>Error creating table: " . $conn->error;
+	}
+	
+	//char_relation	Character Relations
+	$sql = "CREATE TABLE actor_relation (
+	cidPri  INT(10) NOT NULL,
+	cidRel INT(10) NOT NULL,
+	relation INT(10) NOT NULL,
+	reg_date TIMESTAMP
+	)";
+	//Relation: 0 NULL, 1 FATHER, 2 MOTHER, 3 CHILD, 4 LOVER, 5 MARRIED, 6 ENEMY, 7 RIVAL
 
+	if ($conn->query($sql) === TRUE) {
+		echo "<BR>Table char_rel created successfully. ";
+	} else {
+		echo "<BR>Error creating table: " . $conn->error;
+	}	
+	
+//=============================TEST DATA=================================
 //TEST DATA for HOUSE
 	$sql = "INSERT INTO house (hid, name, home, quote, house_relation, house_char, house_unit, house_planet, house_setting)
 	VALUES (1, 'House Bob', 42, 'Woe is to our Foes', 1, 2, 3, 4, 5)";
@@ -276,14 +318,47 @@ if ($conn->connect_error) {
 	}
 
 
-/*
-$sql = "DROP DATABASE myDB";
-if ($conn->query($sql) === TRUE) {
-    echo "<BR>Database deleted successfully.";
-} else {
-    echo "<BR>Error deleting database: " . $conn->error;
-}
-*/
+//TEST DATA for  character
+	$sql = "INSERT INTO actor (cid, name, birth, gender, health, preg, pregStart, descript, location, owner, pos, intel, brawn, charisma, expMilitary, expAdmin)
+	VALUES (1, 'Jo Bob', 12600, 0, 10, 0, 0, 'Jo Bob was his name.', 1, 1, 1, 3, 4, 4, 3, 4)";
+
+	if ($conn->query($sql) === TRUE) {
+		echo "<BR>New Character created successfully";
+	} else {
+		echo "<BR>Error: " . $sql . "<br>" . $conn->error;
+	}
+	
+		$sql = "INSERT INTO actor (cid, name, birth, gender, health, preg, pregStart, descript, location, owner, pos, intel, brawn, charisma, expMilitary, expAdmin)
+	VALUES (2, 'Alice Bob', 12600, 1, 5, 0, 0, 'Alice Bob was his name.', 2, 1, 0, 3, 4, 6, 3, 4)";
+
+	if ($conn->query($sql) === TRUE) {
+		echo "<BR>New Character created successfully";
+	} else {
+		echo "<BR>Error: " . $sql . "<br>" . $conn->error;
+	}
+	
+		$sql = "INSERT INTO actor (cid, name, birth, gender, health, preg, pregStart, descript, location, owner, pos, intel, brawn, charisma, expMilitary, expAdmin)
+	VALUES (3, 'Margert Bob', 1800, 0, 10, 0, 0, 'Son of Alice and Jo.', 1, 1, 0, 3, 2, 2, 2, 4)";
+
+	if ($conn->query($sql) === TRUE) {
+		echo "<BR>New Character created successfully";
+	} else {
+		echo "<BR>Error: " . $sql . "<br>" . $conn->error;
+	}
+	
+		//0 NULL, 1 FATHER, 2 MOTHER, 3 CHILD, 4 LOVER, 5 MARRIED, 6 ENEMY, 7 RIVAL
+	
+//TEST DATA for char_relation
+	$sql = "INSERT INTO actor_relation (cidPri, cidRel, relation)
+	VALUES (1, 2, 5)";
+
+	if ($conn->query($sql) === TRUE) {
+		echo "<BR>New Character Relation created successfully";
+	} else {
+		echo "<BR>Error: " . $sql . "<br>" . $conn->error;
+	}
+
+	
 
 $conn->close();
 ?> 

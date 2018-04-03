@@ -41,14 +41,14 @@ if ($conn->connect_error) {
 <!-- End Boilerplate -->
 
 <body>
-<a href="house.php">Back to House</a>
 <?php //Planet Stats
 $pid = $_GET['varname'];
 $result = $conn->query("SELECT name, locX, locY, size, terrain, secTerrain, descript, expLabour, genLabour, totalPop, minerals, popGrowth, wealth, eduLevel FROM planet WHERE pid = $pid");
 $planet = $result->fetch_assoc();
-
+echo '<a href="planet_edit.php?varname=' . $pid . '">Edit Planet</a><br>';
 echo "<h1>" . $planet["name"] . "</h1>";
-echo "A " . $planet["secTerrain"] . " " . $planet["terrain"] . " world." . "<br>";
+
+echo "Type: A " . $planet["secTerrain"] . " " . $planet["terrain"] . " world." . "<br>";
 echo "Description: " . $planet["descript"] . "<br>";
 echo "<h2>Stats:</h2>";
 echo "Expert Labour: " . $planet["expLabour"] . "<br>";
