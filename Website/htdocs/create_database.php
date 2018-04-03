@@ -192,7 +192,7 @@ if ($conn->connect_error) {
 	preg INT(10) NOT NULL,
 	pregStart INT(10) NOT NULL,
 	descript VARCHAR(100) NOT NULL,
-	location INT(10) NOT NULL,
+	loc INT(10) NOT NULL,
 	owner INT(10) NOT NULL,
 	pos INT(100) NOT NULL,
 	intel INT(10) NOT NULL,
@@ -318,8 +318,8 @@ if ($conn->connect_error) {
 	}
 
 
-//TEST DATA for  character
-	$sql = "INSERT INTO actor (cid, name, birth, gender, health, preg, pregStart, descript, location, owner, pos, intel, brawn, charisma, expMilitary, expAdmin)
+//TEST DATA for character
+	$sql = "INSERT INTO actor (cid, name, birth, gender, health, preg, pregStart, descript, loc, owner, pos, intel, brawn, charisma, expMilitary, expAdmin)
 	VALUES (1, 'Jo Bob', 12600, 0, 10, 0, 0, 'Jo Bob was his name.', 1, 1, 1, 3, 4, 4, 3, 4)";
 
 	if ($conn->query($sql) === TRUE) {
@@ -328,8 +328,8 @@ if ($conn->connect_error) {
 		echo "<BR>Error: " . $sql . "<br>" . $conn->error;
 	}
 	
-		$sql = "INSERT INTO actor (cid, name, birth, gender, health, preg, pregStart, descript, location, owner, pos, intel, brawn, charisma, expMilitary, expAdmin)
-	VALUES (2, 'Alice Bob', 12600, 1, 5, 0, 0, 'Alice Bob was his name.', 2, 1, 0, 3, 4, 6, 3, 4)";
+		$sql = "INSERT INTO actor (cid, name, birth, gender, health, preg, pregStart, descript, loc, owner, pos, intel, brawn, charisma, expMilitary, expAdmin)
+	VALUES (2, 'Alice Bob', 12600, 1, 5, 1, 5, 'Alice Bob was his name.', 2, 1, 1, 3, 4, 6, 3, 4)";
 
 	if ($conn->query($sql) === TRUE) {
 		echo "<BR>New Character created successfully";
@@ -337,8 +337,8 @@ if ($conn->connect_error) {
 		echo "<BR>Error: " . $sql . "<br>" . $conn->error;
 	}
 	
-		$sql = "INSERT INTO actor (cid, name, birth, gender, health, preg, pregStart, descript, location, owner, pos, intel, brawn, charisma, expMilitary, expAdmin)
-	VALUES (3, 'Margert Bob', 1800, 0, 10, 0, 0, 'Son of Alice and Jo.', 1, 1, 0, 3, 2, 2, 2, 4)";
+		$sql = "INSERT INTO actor (cid, name, birth, gender, health, preg, pregStart, descript, loc, owner, pos, intel, brawn, charisma, expMilitary, expAdmin)
+	VALUES (3, 'Margert Bob', 1800, 0, 10, 0, 0, 'Son of Alice and Jo.', 1, 1, 2, 3, 2, 2, 2, 4)";
 
 	if ($conn->query($sql) === TRUE) {
 		echo "<BR>New Character created successfully";

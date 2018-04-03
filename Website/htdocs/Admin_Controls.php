@@ -18,6 +18,7 @@ parent.document.getElementById("data_frame").src = page+x;
 Testing Control Panel<br>
 <button onclick="golink('create_database')">Recreate Database Page</button>
 <button onclick="golink('house', 1)">Default House</button>
+<button onclick="golink('/SN/character/character', 1)">Default Character</button>
 <button onclick="golink('create_house')">Create New House</button>
 </body>
 </html>

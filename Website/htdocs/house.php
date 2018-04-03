@@ -106,19 +106,19 @@ else { echo "No Holdings."; }
 <td>
 <h2>Character Overview</h2>
 <?php
-$actor = $conn->query("SELECT cid, name, birth, gender, health, preg, pregStart, descript, location, owner, pos, intel, brawn, charisma, expMilitary, expAdmin FROM actor WHERE owner = $hid");
+$actor = $conn->query("SELECT cid, name, birth, gender, health, preg, pregStart, descript, loc, owner, pos, intel, brawn, charisma, expMilitary, expAdmin FROM actor WHERE owner = $hid");
 
 //$result = $conn->query($holding);
 if ($actor->num_rows > 0) {
     // output data of each row
     while($row = $actor->fetch_assoc()) {
-		$pid = $row["location"];
+		$pid = $row["loc"];
 		$pname = $conn->query("SELECT name FROM planet WHERE pid = $pid");
 		$row2 = $pname->fetch_assoc();
         echo 
 			"<holding>
 				<ul style=\"list-style-type:none\">
-					<li>Name: <a href=\"actor.php?varname=" . $row["cid"] . "\">" . $row["name"] . "</a></li>" .
+					<li>Name: <a href=\"/SN/character/character.php?varname=" . $row["cid"] . "\">" . $row["name"] . "</a></li>" .
 					"<li>Age: " . ($row["birth"]/360) . " years old.</li>" .
 					"<li>Gender: " . (($row["gender"] == 0)?("male"):("female")) . "</li>" .
 					"<li>Health: " . $row["health"] . "</li>" .
@@ -145,33 +145,7 @@ else { echo "No Characters."; }
 <tr>
 <td>
 <h2>Military Overview (To Be Done)</h2>
-
-Old Test code here just to make more text appears.
-<?php
-$sql = "SELECT hid, name, home FROM house";
-$result = $conn->query($sql);
-
-if ($result->num_rows > 0) {
-    // output data of each row
-    while($row = $result->fetch_assoc()) {
-        echo "<BR>id: " . $row["hid"]. " - Name: " . $row["name"]. " " . $row["home"];
-    }
-} else {
-    echo "<BR>0 results";
-}
-
-$sql = "SELECT hid, name, home FROM house WHERE hid = 2";
-$result = $conn->query($sql);
-
-if ($result->num_rows > 0) {
-    // output data of each row
-    while($row = $result->fetch_assoc()) {
-        echo "<BR>id: " . $row["hid"]. " - Name: " . $row["name"]. " " . $row["home"];
-    }
-} else {
-    echo "<BR>0 results";
-}
-?> 
+ 
 </tr>
 </td>
 </table>

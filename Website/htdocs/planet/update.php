@@ -11,6 +11,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+$pid=$_POST["pid"];
 $name=$_POST["name"];
 $terrain=$_POST["terrain"];
 $secTerrain=$_POST["secTerrain"];
@@ -35,7 +36,7 @@ minerals='$minerals',
 popGrowth='$popGrowth',
 wealth='$wealth',
 eduLevel='$eduLevel'
-WHERE pid=1";
+WHERE pid='$pid'";
 if($conn->query($sql)===TRUE){echo "DATA updated";}
 $conn->close();
 ?>

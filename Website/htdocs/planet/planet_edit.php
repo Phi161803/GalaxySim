@@ -53,10 +53,11 @@ echo '<a href="planet.php?varname=' . $pid . '">Back to Planet</a><br>';
 <h2>Editable Stats:</h2>
 
 <?php
-echo 'Name: <input type="text" id="name" value=' . $planet["name"] . '><br>';
-echo 'Primary Type: <input type="text" id="terrain" value=' . $planet["terrain"] . '><br>';
-echo 'Secondary Type: <input type="text" id="secTerrain" value=' . $planet["secTerrain"] . '><br>';
-echo 'Description: <input type="text" id="descript" value=' . $planet["descript"] . '><br>';
+echo '<input type="hidden" id="pid" value="' . $pid . '">';
+echo 'Name: <input type="text" id="name" value="' . $planet["name"] . '"><br>';
+echo 'Primary Type: <input type="text" id="terrain" value="' . $planet["terrain"] . '"><br>';
+echo 'Secondary Type: <input type="text" id="secTerrain" value="' . $planet["secTerrain"] . '"><br>';
+echo 'Description: <input type="text" id="descript" value="' . $planet["descript"] . '"><br>';
 echo 'Expert Labour: <input type="text" id="expLabour" value=' . $planet["expLabour"] . '><br>';
 echo 'General Labour: <input type="text" id="genLabour" value=' . $planet["genLabour"] . '><br>';
 echo 'Total Population: <input type="text" id="totalPop" value=' . $planet["totalPop"] . '><br>';
@@ -71,6 +72,7 @@ echo 'Education Level: <input type="text" id="eduLevel" value=' . $planet["eduLe
 <script>
 	$(document).ready(function(){
 		$("#update").click(function(){
+			var pid = $("#pid").val();
 			var name=$("#name").val();
 			var terrain=$("#terrain").val();
 			var secTerrain=$("#secTerrain").val();
@@ -86,6 +88,7 @@ echo 'Education Level: <input type="text" id="eduLevel" value=' . $planet["eduLe
 				url:'update.php',
 				method:'POST',
 				data:{
+					pid:pid,
 					name:name,
 					terrain:terrain,
 					secTerrain:secTerrain,
