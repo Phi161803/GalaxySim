@@ -8,17 +8,33 @@ var x = ".php?varname=";
 //document.write(pid);
 parent.document.getElementById("data_frame").src = page+x+a;
 }
+
 function golink(page) {
 var x = ".php";
 //document.write(page+x);
 parent.document.getElementById("data_frame").src = page+x;
+setTimeout(function(){
+	parent.document.getElementById("map_frame").src = "map.php";
+},1000);
+}
+
+function gomap(page) {
+var x = ".php";
+//document.write(page+x);
+parent.document.getElementById("data_frame").src = page+x;
+setTimeout(function(){
+	parent.document.getElementById("map_frame").src = "map.php";
+},1000);
 }
 </script>
 
 Testing Control Panel<br>
-<button onclick="golink('create_database')">Recreate Database Page</button>
+<button onclick="gomap('create_database')">Recreate Database Page</button>
 <button onclick="golink('house', 1)">Default House</button>
 <button onclick="golink('/SN/character/character', 1)">Default Character</button>
 <button onclick="golink('create_house')">Create New House</button>
+<BR>
+<button onclick="golink('house_list')">House List</button>
+<button onclick="golink('planet_list')">Planet List</button>
 </body>
 </html>

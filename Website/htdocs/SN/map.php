@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <style>
 table {
 	width: 100%;
@@ -37,32 +38,22 @@ if ($conn->connect_error) {
 <!-- End Boilerplate -->
 
 <body>
-<!--Extremely basic map, no controls as of yet-->
-<script>
-function goplanet(pid) {
-var x = "/SN/planet/planet.php?varname=";
-//document.write(pid);
-parent.document.getElementById("data_frame").src = x+pid;
-}
-</script>
+<!--Extremely basic map-->
 
 <?php
-
-//echo "<button onclick=\"goplanet(1)\">" . "X" . "</button>";
-
-$X = 0;
-$Y = 0;
+$X = -25;
+$Y = -25;
 
 echo "<table>";
 echo "<tr>";
 $i = 0;
 echo "<th></th>";
-while ($i < 16){echo "<th>" . $i . "</th>"; $i++;}
+while ($i < 50){echo "<th>" . ($i-25) . "</th>"; $i++;}
 echo "</tr>";
-	while ($Y < 16){
+	while ($Y < 25){
 		echo "<tr>";
 		echo "<th>" . $Y . "</th>";
-		while ($X < 16){
+		while ($X < 25){
 			$location = $conn->query("SELECT locY, locX, pid, name FROM planet WHERE locX = $X AND locY = $Y");
 			$row = $location->fetch_assoc();
 			echo "<td>";
@@ -79,4 +70,53 @@ $conn->close();
 ?> 
 
 </body>
+<script>
+function goplanet(a) {parent.document.getElementById("data_frame").src = "/SN/planet/planet.php?varname="+a;}
+
+(function($) {
+  $.dragScroll = function(options) {
+    var settings = $.extend({
+      scrollVertical: true,
+      scrollHorizontal: true,
+      cursor: null
+    }, options);
+
+    var clicked = false,
+      clickY, clickX;
+
+    var getCursor = function() {
+      if (settings.cursor) return settings.cursor;
+      if (settings.scrollVertical && settings.scrollHorizontal) return 'move';
+      if (settings.scrollVertical) return 'row-resize';
+      if (settings.scrollHorizontal) return 'col-resize';
+    }
+
+    var updateScrollPos = function(e, el) {
+      $('html').css('cursor', getCursor());
+      var $el = $(el);
+      settings.scrollVertical && $el.scrollTop($el.scrollTop() + (clickY - e.pageY));
+      settings.scrollHorizontal && $el.scrollLeft($el.scrollLeft() + (clickX - e.pageX));
+    }
+
+    $(document).on({
+      'mousemove': function(e) {
+        clicked && updateScrollPos(e, this);
+      },
+      'mousedown': function(e) {
+        clicked = true;
+        clickY = e.pageY;
+        clickX = e.pageX;
+      },
+      'mouseup': function() {
+        clicked = false;
+        $('html').css('cursor', 'auto');
+      }
+    });
+  }
+}(jQuery))
+
+$.dragScroll();
+</script>
+
+
 </html>

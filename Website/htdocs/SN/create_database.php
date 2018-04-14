@@ -140,6 +140,7 @@ if ($conn->connect_error) {
 	pid INT(10) UNSIGNED NOT NULL,
 	hid INT(10) UNSIGNED NOT NULL,
 	hidden BOOL NOT NULL,
+	reg_date TIMESTAMP
 	)";
 	//0 for hidden, 1 for visible
 	
@@ -172,8 +173,9 @@ if ($conn->connect_error) {
 
 	//house_relations	Relations
 	$sql = "CREATE TABLE house_relation (
-	hid INT(10) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-	type INT(5) UNSIGNED NOT NULL,
+	hid INT(10) UNSIGNED NOT NULL,
+	hid2 INT(10) UNSIGNED NOT NULL,
+	relation INT(5) UNSIGNED NOT NULL,
 	reg_date TIMESTAMP
 	)";
 
@@ -282,7 +284,7 @@ if ($conn->connect_error) {
 //=============================TEST DATA=================================
 //TEST DATA for HOUSE
 	$sql = "INSERT INTO house (hid, name, home, quote, house_relation, house_char, house_unit, house_planet, house_setting)
-	VALUES (1, 'House Bob', 42, 'Woe is to our Foes', 1, 2, 3, 4, 5)";
+	VALUES (1, 'House Bob', 1, 'Woe is to our Foes', 1, 2, 3, 4, 5)";
 
 	if ($conn->query($sql) === TRUE) {
 		echo "<BR>New House created successfully";
@@ -291,7 +293,7 @@ if ($conn->connect_error) {
 	}
 
 	$sql = "INSERT INTO house (hid, name, home, quote, house_relation, house_char, house_unit, house_planet, house_setting)
-	VALUES (2, 'House Marley', 42, 'We Stand Ready', 1, 2, 3, 4, 5)";
+	VALUES (2, 'House Marley', 2, 'We Stand Ready', 1, 2, 3, 4, 5)";
 
 	if ($conn->query($sql) === TRUE) {
 		echo "<BR>New House created successfully";
@@ -429,7 +431,6 @@ if ($conn->connect_error) {
 	} else {
 		echo "<BR>Error: " . $sql . "<br>" . $conn->error;
 	}
-
 	
 
 $conn->close();
