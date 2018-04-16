@@ -36,7 +36,7 @@ namespace ShadowNova
             //Creates coordinates and checks if they are taken, if so, rerolls them.
             int locXa = Program.r.Next(-Global.galaxySize / 2, Global.galaxySize / 2);
             int locYa = Program.r.Next(-Global.galaxySize / 2, Global.galaxySize / 2);
-            while (Global.planetList.Exists(y => y.locY == locYa) && Global.planetList.Exists(x => x.locY == locYa))
+            while (Global.planetList.Exists(y => (y.locY == locYa) && (y.locX == locXa)))
             {
                 locXa = Program.r.Next(-Global.galaxySize / 2, Global.galaxySize / 2);
                 locYa = Program.r.Next(-Global.galaxySize / 2, Global.galaxySize / 2);
@@ -52,8 +52,8 @@ namespace ShadowNova
             option = new[] { "Dry", "Frozen", "Verdant", "Wet", "Barren", "", "", "", "", "", "" };
             secTerrain = option[Program.r.Next(0, 10)];
 
-            descript = "The Planet is the " + pid + "th planet to be created.";
-
+            //General Stats
+            descript = "The Planet was the " + pid + "th planet to be created.";
             expLabour = Program.r.Next(1, 10);
             genLabour = Program.r.Next(1, 10);
             totalPop = expLabour + genLabour; //This will be more than these values later.
@@ -63,6 +63,7 @@ namespace ShadowNova
             eduLevel = Program.r.Next(1, 10); //Not likely to matter in the end.
         }
 
+        //If you have a specific planet that you want created, lets you feed everything in.
         public Planet(int pid, string name, int locX, int locY, int size, string terrain, string secTerrain, string descript, int expLabour
             , int genLabour, int totalPop, int minerals, int popGrowth, int wealth, int eduLevel)
         {
@@ -81,6 +82,26 @@ namespace ShadowNova
             this.popGrowth = popGrowth;
             this.wealth = wealth;
             this.eduLevel = eduLevel;
+        }
+
+        //Helper for save and load functions. Not strictly required, but nice way to create a dummy.
+        public Planet(bool x)
+        {
+            this.pid = 0;
+            this.name = "";
+            this.locX = 0;
+            this.locY = 0;
+            this.size = 0;
+            this.terrain = "";
+            this.secTerrain = "";
+            this.descript = "";
+            this.expLabour = 0;
+            this.genLabour = 0;
+            this.totalPop = 0;
+            this.minerals = 0;
+            this.popGrowth = 0;
+            this.wealth = 0;
+            this.eduLevel = 0;
         }
 
         public void loadPlanet()
@@ -159,10 +180,10 @@ namespace ShadowNova
                         Global.planetList[j].popGrowth,
                         Global.planetList[j].wealth,
                         Global.planetList[j].eduLevel);
-                    //Console.WriteLine(query);
                     cmd = new MySqlCommand(query, dbCon.Connection);
                     cmd.ExecuteNonQuery();
                 }
+                Console.WriteLine("Planet Data Saved.");
                 dbCon.Close();
             }
         }

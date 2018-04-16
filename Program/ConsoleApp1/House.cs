@@ -22,11 +22,9 @@ namespace ShadowNova
         //Default Constructor Generates Random Values
         public House()
         {
-            string[] option;
-
             hid = ++Global.highHID;
             name = "House TestNUM" + hid;
-            home = Program.r.Next(2, Global.highPID);
+            home = Program.r.Next(1, Global.highPID);
             quote = "Unoriginal quote Number" + hid;
 
             for (int i = Program.r.Next(1, Global.highHID); i > 0; i--)
@@ -63,6 +61,15 @@ namespace ShadowNova
             this.home = home;
             this.quote = quote;
             this.houseRelation = houseRelation;
+        }
+
+        //Helper for save and load functions. Not strictly required, but nice way to create a dummy.
+        public House(bool x)
+        {
+            this.hid = 0;
+            this.name = "";
+            this.home = 0;
+            this.quote = "";
         }
 
         public void loadHouse()
@@ -136,12 +143,12 @@ namespace ShadowNova
                             j,
                             Global.houseList[j].houseRelation[k].hid,
                             Global.houseList[j].houseRelation[k].relation);
-                        //Console.WriteLine(query);
                         cmd = new MySqlCommand(query, dbCon.Connection);
                         cmd.ExecuteNonQuery();
                     }
 
                 }
+                Console.WriteLine("House Data Saved.");
                 dbCon.Close();
             }
         }
