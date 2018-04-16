@@ -41,28 +41,42 @@ if ($conn->connect_error) {
 <!--Extremely basic map-->
 
 <?php
-$X = -25;
-$Y = -25;
+$size = 500;
+$X = -$size/2;
+$Y = -$size/2;
 
 echo "<table>";
 echo "<tr>";
 $i = 0;
 echo "<th></th>";
-while ($i < 50){echo "<th>" . ($i-25) . "</th>"; $i++;}
+while ($i < $size){echo "<th>" . ($i-$size/2) . "</th>"; $i++;}
 echo "</tr>";
-	while ($Y < 25){
+	while ($Y < $size/2){
 		echo "<tr>";
 		echo "<th>" . $Y . "</th>";
-		while ($X < 25){
-			$location = $conn->query("SELECT locY, locX, pid, name FROM planet WHERE locX = $X AND locY = $Y");
-			$row = $location->fetch_assoc();
+		$location = $conn->query("SELECT locY, locX, pid, name FROM planet WHERE locY = $Y");//$location = $conn->query("SELECT locY, locX, pid, name FROM planet WHERE locX = $X AND locY = $Y");
+		while($row = $location->fetch_assoc())
+		{
+			while ($X < $size/2){
+			//$location = $conn->query("SELECT locY, locX, pid, name FROM planet WHERE locX = $X AND locY = $Y");
+			//$row = $location->fetch_assoc();
 			echo "<td>";
-			if ($location->num_rows > 0) {echo "<button onclick=\"goplanet(" . $row['pid'] . ")\">" . $row['name'] . "</button>";}
+			//if ($location->num_rows > 0) {echo "<button onclick=\"goplanet(" . $row['pid'] . ")\">" . $row['name'] . "</button>";}
+			//else {echo " ";}
+			if ($row['locX'] == $X)
+			{
+				echo "<button onclick=\"goplanet(" . $row['pid'] . ")\">" . $row['name'] . "</button>";
+				echo "</td>";
+				$X++;
+				break;
+			}
 			else {echo " ";}
 			echo "</td>";
 			$X++;
 		}
-		$X = 0;
+		}
+		
+		$X = -$size/2;
 		$Y++;
 	}
 

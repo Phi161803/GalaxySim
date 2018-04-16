@@ -98,6 +98,15 @@ if ($conn->connect_error) {
 		echo "<BR>Error creating table: " . $conn->error;
 	}
 	
+	$sql = "ALTER TABLE planet_holding ADD UNIQUE unique_index (pid, hid)";
+
+	if ($conn->query($sql) === TRUE) {
+		echo "<BR>Table house_relation created altered for keys. ";
+	} else {
+		echo "<BR>Error editing table: " . $conn->error;
+	}
+	
+	
 //STARLANE TABLE
 	$sql = "CREATE TABLE starlane (
 	slid INT(10) UNSIGNED PRIMARY KEY,
@@ -107,6 +116,7 @@ if ($conn->connect_error) {
 	sPlanet INT(10) NOT NULL,
 	slocX INT(10) NOT NULL,
 	slocY INT(10) NOT NULL,
+	pub BOOL NOT NULL,
 	starlane_units INT(10) UNSIGNED NOT NULL,
 	starlane_hidden INT(10) UNSIGNED NOT NULL,
 	reg_date TIMESTAMP
@@ -116,6 +126,14 @@ if ($conn->connect_error) {
 		echo "<BR>Table starlane created successfully. ";
 	} else {
 		echo "<BR>Error creating table: " . $conn->error;
+	}
+	
+	$sql = "ALTER TABLE starlane ADD UNIQUE unique_index (fplanet, splanet)";
+
+	if ($conn->query($sql) === TRUE) {
+		echo "<BR>Table house_relation created altered for keys. ";
+	} else {
+		echo "<BR>Error editing table: " . $conn->error;
 	}
 	
 	//starlane_units
@@ -370,8 +388,8 @@ if ($conn->connect_error) {
 	}
 
 //TEST DATA for STARLANE
-	$sql = "INSERT INTO starlane (slid, fPlanet, flocX, flocY, sPlanet, slocX, slocY, starlane_units, starlane_hidden)
-	VALUES (1, 1, 5, 0, 2, 14, 15, 1, 1)";
+	$sql = "INSERT INTO starlane (slid, fPlanet, flocX, flocY, sPlanet, slocX, slocY, pub, starlane_units, starlane_hidden)
+	VALUES (1, 1, 5, 0, 2, 14, 15, 1, 1, 1)";
 
 	if ($conn->query($sql) === TRUE) {
 		echo "<BR>New Holding created successfully";
@@ -380,8 +398,8 @@ if ($conn->connect_error) {
 	}
 	
 	
-	$sql = "INSERT INTO starlane (slid, fPlanet, flocX, flocY, sPlanet, slocX, slocY, starlane_units, starlane_hidden)
-	VALUES (2, 1, 5, 0, 3, 0, 15, 2, 2)";
+	$sql = "INSERT INTO starlane (slid, fPlanet, flocX, flocY, sPlanet, slocX, slocY, pub, starlane_units, starlane_hidden)
+	VALUES (2, 1, 5, 0, 3, 0, 15, 1, 2, 2)";
 	
 	if ($conn->query($sql) === TRUE) {
 		echo "<BR>New Holding created successfully";

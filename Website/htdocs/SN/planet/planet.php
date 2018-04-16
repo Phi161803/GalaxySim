@@ -49,6 +49,7 @@ echo '<a href="planet_edit.php?varname=' . $pid . '">Edit Planet</a><br>';
 echo "<h1>" . $planet["name"] . "</h1>";
 echo "Type: A " . $planet["secTerrain"] . " " . $planet["terrain"] . " world." . "<br>";
 echo "Description: " . $planet["descript"] . "<br>";
+echo "Coordinates: X:" . $planet["locX"] . " Y:" . $planet["locY"];
 echo "<h2>Stats:</h2>";
 echo "Expert Labour: " . $planet["expLabour"] . "<br>";
 echo "General Labour: " . $planet["genLabour"] . "<br>";
@@ -113,7 +114,7 @@ if ($holding->num_rows > 0) {
         echo 
 			"<holding>
 				<ul style=\"list-style-type:none\">
-					<li>Owner: <a href=\"house.php?varname=" . $row["hid"] . "\">" . $row2["name"] . "</a></li>" .
+					<li>Owner: <a href=\"/SN/house.php?varname=" . $row["hid"] . "\">" . $row2["name"] . "</a></li>" .
 					"<li>Food: " . $row["food"] . "</li>" .
 					"<li>Raw Materials: " . $row["rawMat"] . "</li>" .
 					"<li>Energy: " . $row["energy"] . "</li>";
