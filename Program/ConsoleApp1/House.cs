@@ -72,6 +72,7 @@ namespace ShadowNova
             this.quote = "";
         }
 
+
         public void loadHouse()
         {
             var dbCon = DBConnection.Instance();
@@ -102,7 +103,6 @@ namespace ShadowNova
                     //Reads each houses's info in, row by row.
                     hr = new house_relation(reader.GetInt32(1), reader.GetInt32(2));
                     Global.houseList[reader.GetInt32(0)].houseRelation.Add(hr);
-                    Global.highPID = reader.GetInt32(0);
                 }
 
                 Console.WriteLine("Loaded Houses");

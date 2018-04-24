@@ -78,6 +78,15 @@ namespace ShadowNova
             this.upgrade4 = false;
         }
 
+        public void print(int pid, int hid)
+        {
+            int i = Global.holdingList.FindIndex(y => (y.pid == pid) && (y.hid == hid));
+            Console.WriteLine("HID: {0}\nFood: {1}\nMinerals: {2}\nEnergy: {3}\nUpgrade1: {4}\nUpgrade2: {5}\nUpgrade3: {6}\nUpgrade4: {7}"
+                , Global.holdingList[i].hid, Global.holdingList[i].food, Global.holdingList[i].rawMat, Global.holdingList[i].energy,
+                Global.holdingList[i].upgrade1, Global.holdingList[i].upgrade2, Global.holdingList[i].upgrade3, Global.holdingList[i].upgrade4);
+            //Finish this.
+        }
+
         public void loadHolding() //Left here
         {
             var dbCon = DBConnection.Instance();

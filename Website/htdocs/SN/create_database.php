@@ -297,9 +297,33 @@ if ($conn->connect_error) {
 		echo "<BR>Table char_rel created successfully. ";
 	} else {
 		echo "<BR>Error creating table: " . $conn->error;
+	}
+
+//SETTING TABLE
+	$sql = "CREATE TABLE setting (
+	manualTick INT(10) UNSIGNED,
+	shutdown INT(10) UNSIGNED,
+	createGal INT(10) UNSIGNED,
+	reg_date TIMESTAMP
+	)";
+
+	if ($conn->query($sql) === TRUE) {
+		echo "<BR>Table setting created successfully.";
+	} else {
+		echo "<BR>Error creating table: " . $conn->error;
 	}	
 	
 //=============================TEST DATA=================================
+//TEST DATA for SETTING
+$sql = "INSERT INTO setting (manualTick, shutdown, createGal)
+	VALUES (0,0,0)";
+
+	if ($conn->query($sql) === TRUE) {
+		echo "<BR>New House created successfully";
+	} else {
+		echo "<BR>Error: " . $sql . "<br>" . $conn->error;
+	}
+
 //TEST DATA for HOUSE
 	$sql = "INSERT INTO house (hid, name, home, quote, house_relation, house_char, house_unit, house_planet, house_setting)
 	VALUES (1, 'House Bob', 1, 'Woe is to our Foes', 1, 2, 3, 4, 5)";
@@ -352,7 +376,7 @@ if ($conn->connect_error) {
 
 //TEST DATA for  planet_holding
 	$sql = "INSERT INTO planet_holding (pid, hid, food, rawMat, energy, upgrade1, upgrade2, upgrade3, upgrade4)
-	VALUES (1, 1, 50, 60, 70, 1, 0, 0, 1)";
+	VALUES (1, 1, 50, 60, 70, true, false, false, true)";
 
 	if ($conn->query($sql) === TRUE) {
 		echo "<BR>New Holding created successfully";

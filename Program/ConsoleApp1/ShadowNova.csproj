@@ -55,6 +55,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actor.cs" />
+    <Compile Include="Heartbeat.cs" />
     <Compile Include="Holding.cs" />
     <Compile Include="DBConnection.cs" />
     <Compile Include="House.cs" />

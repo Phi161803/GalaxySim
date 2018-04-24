@@ -41,7 +41,7 @@ if ($conn->connect_error) {
 <!--Extremely basic map-->
 
 <?php
-$size = 500;
+$size = 100;
 $X = -$size/2;
 $Y = -$size/2;
 

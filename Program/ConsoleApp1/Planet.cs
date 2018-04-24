@@ -104,6 +104,12 @@ namespace ShadowNova
             this.eduLevel = 0;
         }
 
+        public void print()
+        {
+            Console.WriteLine("PID: {0}\nName: {1}\nLocation: {2},{3}\nSize: {4}", pid, name, locX, locY, size);
+            //Finish this.
+        }
+
         public void loadPlanet()
         {
             var dbCon = DBConnection.Instance();

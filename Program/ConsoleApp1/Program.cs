@@ -12,15 +12,17 @@ namespace ShadowNova
     //Global Values
     static class Global
     {
-        public static int galaxySize = 250; //More than 250 is bad for the frontend right now. It will be fixed.
+        public static int galaxySize = 100; //More than 250 is bad for the frontend right now. It will be fixed.
         public static int highPID = 0;
         public static int highHID = 0;
         public static int highHold = 0;
         public static int highSLID = 0;
+        public static int highCID = 0;
         public static List<Planet> planetList = new List<Planet>();
         public static List<House> houseList = new List<House>();
         public static List<Holding> holdingList = new List<Holding>();
         public static List<Starlane> laneList = new List<Starlane>();
+        public static List<Actor> actorList = new List<Actor>();
         public static Planet[] pla = new Planet[10000];
     }
 
@@ -31,9 +33,60 @@ namespace ShadowNova
 		static void Main(string[] rgs)
 		{
             Load();
-            Creation();
-            Save();   
-		}
+
+            var dbCon = DBConnection.Instance();
+            dbCon.DatabaseName = "myDB";
+            int timeCheck = 5000; //Time between checks, 5 seconds
+            int timeCount = 0; //Time that has occured since last tick
+            int ticktime = 60000 * 60;//Time to trigger next Tick, minute * number of minutes
+            int triggerTick = 0;
+            int shutdown = 0;
+            int createGal = 0;
+            Heartbeat beat = new Heartbeat();
+            while(true)
+            {
+                if (dbCon.IsConnect())
+                {
+                    Console.WriteLine("Checking Status");
+                    string query = "SELECT manualTick, shutdown, createGal FROM setting"; //Looking for current highest pid.
+                    var cmd = new MySqlCommand(query, dbCon.Connection);
+                    var reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        triggerTick = reader.GetInt32(0);
+                        shutdown = reader.GetInt32(1);
+                        createGal = reader.GetInt32(2);
+                    }
+
+                    if (triggerTick == 1 || timeCount >= ticktime)
+                    {
+                        Console.WriteLine("Manual Tick Triggered");
+                        beat.beat();
+                        timeCount = 0;
+                    }
+
+                    if (createGal == 1)
+                    {
+                        Console.WriteLine("Galaxy Creation Triggered");
+                        Creation();
+                        Save();
+                    }
+
+                    if (shutdown == 1)
+                    {
+                        Console.WriteLine("Shutdown Triggered");
+                        break;
+                    }
+
+                    reader.Close();
+                }
+                System.Threading.Thread.Sleep(timeCheck); //Waits 5 seconds
+                timeCount =+ timeCheck;
+            }
+            dbCon.Close();
+            Save();
+        }
 
         //Helpers
         static public Random r = new Random();
@@ -55,6 +108,9 @@ namespace ShadowNova
 
             Starlane lane = new Starlane(false);
             lane.loadStarlane();
+
+            Actor act = new Actor(false);
+            act.loadActor();
         }
 
         //Save function
@@ -68,13 +124,15 @@ namespace ShadowNova
             holding.saveHolding();
             Starlane lane = new Starlane(false);
             lane.saveStarlane();
+            Actor act = new Actor(false);
+            act.saveActor();
         }
 
         //Creates a new galaxy with random spawns, good for testing.
         public static void Creation()
         {
             //Populating Galaxy with Random Planets
-            int planets = Global.galaxySize * Global.galaxySize / 400;
+            int planets = Global.galaxySize * Global.galaxySize / 100;
             Planet newPlanet;
             for (int i = Global.highPID; i < planets; i++)
             {
@@ -85,7 +143,7 @@ namespace ShadowNova
 
             //Populating Galaxy with Random Houses
             House nh;
-            for (int i = Global.highHID; i < 1000; i++)
+            for (int i = Global.highHID; i < 100; i++)
             {
                 nh = new House();
                 Global.houseList.Add(nh);
@@ -102,7 +160,7 @@ namespace ShadowNova
                 Global.holdingList.Add(nho);
             }
 
-            for (int i = Global.highHold; i < 1000; i++)
+            for (int i = Global.highHold; i < 500; i++)
             {
                 nho = new Holding();
                 Global.holdingList.Add(nho);
