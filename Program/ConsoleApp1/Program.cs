@@ -38,7 +38,7 @@ namespace ShadowNova
             dbCon.DatabaseName = "myDB";
             int timeCheck = 5000; //Time between checks, 5 seconds
             int timeCount = 0; //Time that has occured since last tick
-            int ticktime = 500 * 60;//Time to trigger next Tick, minute * number of minutes
+            int ticktime = 250 * 60;//Time to trigger next Tick, minute * number of minutes. Should be 60000 for 1 hour
             int triggerTick = 0;
             int shutdown = 0;
             int createGal = 0;
