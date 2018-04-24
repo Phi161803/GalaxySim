@@ -20,8 +20,12 @@ namespace ShadowNova
             for (int i = 0; i < Global.highPID; i++)
             {
                 Global.planetList[i].totalPop += Global.planetList[i].popGrowth;
-                Global.planetList[i].genLabour += Global.planetList[i].popGrowth  / 3;
+                Global.planetList[i].genLabour += Global.planetList[i].popGrowth / 3;
                 Global.planetList[i].expLabour += Global.planetList[i].popGrowth / 3;
+                //Update Populations
+                //Buy Food, Minerals, Energy
+                //Consume Food, Minerals, Energy
+
             }
         }
 

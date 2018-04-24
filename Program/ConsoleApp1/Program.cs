@@ -38,7 +38,7 @@ namespace ShadowNova
             dbCon.DatabaseName = "myDB";
             int timeCheck = 5000; //Time between checks, 5 seconds
             int timeCount = 0; //Time that has occured since last tick
-            int ticktime = 60000 * 60;//Time to trigger next Tick, minute * number of minutes
+            int ticktime = 500 * 60;//Time to trigger next Tick, minute * number of minutes
             int triggerTick = 0;
             int shutdown = 0;
             int createGal = 0;
@@ -47,7 +47,7 @@ namespace ShadowNova
             {
                 if (dbCon.IsConnect())
                 {
-                    Console.WriteLine("Checking Status");
+                    Console.WriteLine("Checking Status. timeCount: " + timeCount + " Out of timetick: " + ticktime);
                     string query = "SELECT manualTick, shutdown, createGal FROM setting"; //Looking for current highest pid.
                     var cmd = new MySqlCommand(query, dbCon.Connection);
                     var reader = cmd.ExecuteReader();
@@ -61,7 +61,8 @@ namespace ShadowNova
 
                     if (triggerTick == 1 || timeCount >= ticktime)
                     {
-                        Console.WriteLine("Manual Tick Triggered");
+                        if (triggerTick == 1) Console.WriteLine("Manual Tick Triggered");
+                        else Console.WriteLine("Tick Timer Trigger");
                         beat.beat();
                         timeCount = 0;
                     }
@@ -82,7 +83,7 @@ namespace ShadowNova
                     reader.Close();
                 }
                 System.Threading.Thread.Sleep(timeCheck); //Waits 5 seconds
-                timeCount =+ timeCheck;
+                timeCount += timeCheck;
             }
             dbCon.Close();
             Save();
