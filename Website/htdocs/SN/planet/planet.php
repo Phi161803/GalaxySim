@@ -121,7 +121,7 @@ if ($holding->num_rows > 0) {
 			while ($i < 5)
 			{
 				$upgradeX = "upgrade" . $i;
-				if ($row[$upgradeX] == true){ echo "<li>" . $upgradeX . ": " . $row[$upgradeX] . "</li>"; }
+				if ($row[$upgradeX] == 1){ echo "<li>" . $upgradeX . ": " . $row[$upgradeX] . "</li>"; }
 				$i++;
 			}
 			$i = 1;

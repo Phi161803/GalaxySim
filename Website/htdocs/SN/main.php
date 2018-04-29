@@ -38,6 +38,7 @@ data {
 	color: black;
     margin: 0;
 	padding: 0.5%;
+	background-color: darkred;
 }
 
 
@@ -57,7 +58,7 @@ data {
 </map>
 
 <data>
-	<iframe src="http://localhost/SN/Admin_Controls.php"  width="100%" height="55px"></iframe>
+	<iframe src="http://localhost/SN/Admin_Controls.php"  width="100%" height="90px"></iframe>
 	<iframe id="data_frame" name="data_frame" src="http://localhost/SN/house.php"style="border:none;" width="100%" height="500px"></iframe>
 </data>
 

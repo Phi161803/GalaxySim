@@ -15,7 +15,7 @@ var x = ".php";
 parent.document.getElementById("data_frame").src = page+x;
 setTimeout(function(){
 	parent.document.getElementById("map_frame").src = "map.php";
-},1000);
+},500);
 }
 
 function gomap(page) {
@@ -24,7 +24,7 @@ var x = ".php";
 parent.document.getElementById("data_frame").src = page+x;
 setTimeout(function(){
 	parent.document.getElementById("map_frame").src = "map.php";
-},1000);
+},500);
 }
 </script>
 

@@ -38,86 +38,47 @@ if ($conn->connect_error) {
 <!-- End Boilerplate -->
 
 <body>
-<img id ="planetA" style="display: none;" src="/SN/img/planetA.gif" />
-
-
+<!--Extremely basic map-->
 
 <?php
-	$size = 100;
-	$X = $size/2;
-	$Y = $size/2;
-	$i = -$size/2;
-	
-echo '<canvas id="myCanvas" width="' . $size*32 . ' " height="' . $size*32 .'"
-style="border:1px solid #FFFFFF;">
-</canvas>';
-	
-//Adjusting zero point	
-echo
-	'<script>
-		var canvas = document.getElementById("myCanvas");
-		var ctx = canvas.getContext("2d");
-		ctx.translate('. $size*16 . ',' . $size*16 . ')
-	</script>';
+$size = 50;
+$X = -$size/2;
+$Y = -$size/2;
 
-//Coordinates	
-while ($i <= $size/2)
-	{
-		echo
-			'<script>
-				var canvas = document.getElementById("myCanvas");
-				var ctx = canvas.getContext("2d");
-				ctx.font = "10px Arial";
-				ctx.fillStyle= "white";
-				ctx.fillText("' . $i . '",' . 0 . ',' . $i*32 . ');
-				ctx.fillText("' . $i . '",' . $i*32 . ',' . 0 . ');
-			</script>';
-			$i++;
+echo "<table>";
+echo "<tr>";
+$i = 0;
+echo "<th></th>";
+while ($i < $size){echo "<th>" . ($i-$size/2) . "</th>"; $i++;}
+echo "</tr>";
+	while ($Y < $size/2){
+		echo "<tr>";
+		echo "<th>" . $Y . "</th>";
+		$location = $conn->query("SELECT locY, locX, pid, name FROM planet WHERE locY = $Y");
+		while($row = $location->fetch_assoc())
+		{
+			while ($X < $size/2){
+				echo "<td>";
+				if ($row['locX'] == $X)
+				{
+					echo "<button onclick=\"goplanet(" . $row['pid'] . ")\">" . $row['name'] . "</button>";
+					echo "</td>";
+					$X = -$size/2;
+					break;
+				}
+				else {echo $row['pid'];}
+				echo "</td>"
+				$X++;
+			}
+		}
+		$X = -$size/2;
+		$Y++;
 	}
 
-//Starlanes
-$lanes = $conn->query("SELECT flocX, flocY, slocX, slocY FROM starlane");
-while($row = $lanes->fetch_assoc())
-{			
-	$FPY = $row['flocY']*32-16;
-	$FPX = $row['flocX']*32+16;
-	$SPY = $row['slocY']*32-16;
-	$SPX = $row['slocX']*32+16;
-	echo
-		'<script>
-			var canvas = document.getElementById("myCanvas");
-			var ctx = canvas.getContext("2d");
-			ctx.strokeStyle= "white";
-			ctx.moveTo(' . $FPX . ',' . $FPY . ');
-			ctx.lineTo(' . $SPX . ',' . $SPY . ');
-			ctx.stroke();
-		</script>';	
-}	
-
-//Planets
-$location = $conn->query("SELECT locY, locX, pid, name FROM planet");
-while($row = $location->fetch_assoc())
-{
-		$PY = $row['locY']*32-32;
-	echo
-		'<script>
-			var canvas = document.getElementById("myCanvas");
-			var ctx = canvas.getContext("2d");
-			var img = document.getElementById("planetA");
-			ctx.font = "15px Arial";
-			ctx.fillStyle= "white";
-			ctx.drawImage(img,' . $row['locX']*32 . ',' . $PY . ');
-			ctx.fillText("' . $row['name'] . '",' . $row['locX']*32 . ',' . $row['locY']*32 . ');
-		</script>';	
-}
-
-
 $conn->close();
-?>
-
+?> 
 
 </body>
-
 <script>
 function goplanet(a) {parent.document.getElementById("data_frame").src = "/SN/planet/planet.php?varname="+a;}
 
@@ -165,5 +126,6 @@ function goplanet(a) {parent.document.getElementById("data_frame").src = "/SN/pl
 
 $.dragScroll();
 </script>
+
 
 </html>
