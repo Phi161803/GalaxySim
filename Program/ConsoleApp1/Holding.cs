@@ -14,10 +14,10 @@ namespace ShadowNova
         int food;
         int rawMat;
         int energy;
-        bool upgrade1;
-        bool upgrade2;
-        bool upgrade3;
-        bool upgrade4;
+        bool farm;
+        bool mining;
+        bool power;
+        bool fort;
 
 
         //Default Constructor Generates Random Values
@@ -42,10 +42,10 @@ namespace ShadowNova
             energy = Program.r.Next(1, 500);
 
             //Upgrades
-            upgrade1 = option[Program.r.Next(0, 1)];
-            upgrade2 = option[Program.r.Next(0, 1)];
-            upgrade3 = option[Program.r.Next(0, 1)];
-            upgrade4 = option[Program.r.Next(0, 1)];
+            farm = option[Program.r.Next(0, 1)];
+            mining = option[Program.r.Next(0, 1)];
+            power = option[Program.r.Next(0, 1)];
+            fort = option[Program.r.Next(0, 1)];
             Global.highHold++;
         }
 
@@ -57,10 +57,10 @@ namespace ShadowNova
             this.food = food;
             this.rawMat = rawMat;
             this.energy = energy;
-            this.upgrade1 = upgrade1;
-            this.upgrade2 = upgrade2;
-            this.upgrade3 = upgrade3;
-            this.upgrade4 = upgrade4;
+            this.farm = upgrade1;
+            this.mining = upgrade2;
+            this.power = upgrade3;
+            this.fort = upgrade4;
             Global.highHold++;
         }
 
@@ -72,10 +72,10 @@ namespace ShadowNova
             this.food = 0;
             this.rawMat = 0;
             this.energy = 0;
-            this.upgrade1 = false;
-            this.upgrade2 = false;
-            this.upgrade3 = false;
-            this.upgrade4 = false;
+            this.farm = false;
+            this.mining = false;
+            this.power = false;
+            this.fort = false;
         }
 
         public void print(int pid, int hid)
@@ -83,7 +83,7 @@ namespace ShadowNova
             int i = Global.holdingList.FindIndex(y => (y.pid == pid) && (y.hid == hid));
             Console.WriteLine("HID: {0}\nFood: {1}\nMinerals: {2}\nEnergy: {3}\nUpgrade1: {4}\nUpgrade2: {5}\nUpgrade3: {6}\nUpgrade4: {7}"
                 , Global.holdingList[i].hid, Global.holdingList[i].food, Global.holdingList[i].rawMat, Global.holdingList[i].energy,
-                Global.holdingList[i].upgrade1, Global.holdingList[i].upgrade2, Global.holdingList[i].upgrade3, Global.holdingList[i].upgrade4);
+                Global.holdingList[i].farm, Global.holdingList[i].mining, Global.holdingList[i].power, Global.holdingList[i].fort);
             //Finish this.
         }
 
@@ -141,10 +141,10 @@ namespace ShadowNova
                         Global.holdingList[j].food,
                         Global.holdingList[j].rawMat,
                         Global.holdingList[j].energy,
-                        Global.holdingList[j].upgrade1,
-                        Global.holdingList[j].upgrade2,
-                        Global.holdingList[j].upgrade3,
-                        Global.holdingList[j].upgrade4);
+                        Global.holdingList[j].farm,
+                        Global.holdingList[j].mining,
+                        Global.holdingList[j].power,
+                        Global.holdingList[j].fort);
                     cmd = new MySqlCommand(query, dbCon.Connection);
                     cmd.ExecuteNonQuery();
                 }

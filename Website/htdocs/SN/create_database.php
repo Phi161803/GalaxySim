@@ -299,7 +299,32 @@ if ($conn->connect_error) {
 		echo "<BR>Error creating table: " . $conn->error;
 	}	
 	
+	
+//setting
+	$sql = "CREATE TABLE setting (
+	manualTick INT(10) UNSIGNED NOT NULL,
+	shutdown INT(10) UNSIGNED NOT NULL,
+	createGal INT(10) UNSIGNED NOT NULL,
+	reg_date TIMESTAMP
+	)";
+
+	if ($conn->query($sql) === TRUE) {
+		echo "<BR>Table house_relation created successfully. ";
+	} else {
+		echo "<BR>Error creating table: " . $conn->error;
+	}
+	
 //=============================TEST DATA=================================
+//TEST DATA for SETTING
+	$sql = "INSERT INTO setting (manualTick, shutdown, createGal)
+	VALUES (0, 0, 1)";
+
+	if ($conn->query($sql) === TRUE) {
+		echo "<BR>Settings created successfully";
+	} else {
+		echo "<BR>Error: " . $sql . "<br>" . $conn->error;
+	}
+
 //TEST DATA for HOUSE
 	$sql = "INSERT INTO house (hid, name, home, quote, house_relation, house_char, house_unit, house_planet, house_setting)
 	VALUES (1, 'House Bob', 1, 'Woe is to our Foes', 1, 2, 3, 4, 5)";

@@ -43,7 +43,7 @@ if ($conn->connect_error) {
 
 
 <?php
-	$size = 100;
+	$size = 50;
 	$X = $size/2;
 	$Y = $size/2;
 	$i = -$size/2;
@@ -52,26 +52,88 @@ echo '<canvas id="myCanvas" width="' . $size*32 . ' " height="' . $size*32 .'"
 style="border:1px solid #FFFFFF;">
 </canvas>';
 	
-//Adjusting zero point	
+//Adjusting zero point and script starting stuff	
 echo
 	'<script>
 		var canvas = document.getElementById("myCanvas");
 		var ctx = canvas.getContext("2d");
-		ctx.translate('. $size*16 . ',' . $size*16 . ')
-	</script>';
+		var img = document.getElementById("planetA");
+		ctx.translate('. $size*16 . ',' . $size*16 . ');
+		
+		var linkText="http://google.com";
+		var linkX=32;
+		var linkY=32;
+		var linkHeight=10;
+		var linkWidth;
+		var inLink = false;
+
+		function draw(){
+		  canvas = document.getElementById("myCanvas");
+		  // check if supported
+		  if(canvas.getContext){
+
+			ctx=canvas.getContext("2d");
+
+			//clear canvas
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+			//draw the link
+			ctx.font="10px sans-serif";
+			ctx.fillStyle = "white";
+			ctx.fillText(linkText,linkX,linkY);
+			linkWidth=ctx.measureText(linkText).width;
+
+			//add mouse listeners
+			canvas.addEventListener("mousemove", on_mousemove, false);
+			canvas.addEventListener("click", on_click, false);
+
+		  }
+		}
+
+		//check if the mouse is over the link and change cursor style
+		function on_mousemove (ev) {
+		  var x, y;
+
+		  // Get the mouse position relative to the canvas element.
+		  if (ev.layerX || ev.layerX == 0) { //for firefox
+			x = ev.layerX;
+			y = ev.layerY;
+		  }
+		  x-=canvas.offsetLeft;
+		  y-=canvas.offsetTop;
+
+		  //is the mouse over the link?
+		  if(x>=linkX && x <= (linkX + linkWidth) && y<=linkY && y>= (linkY-linkHeight)){
+			  document.body.style.cursor = "pointer";
+			  inLink=true;
+		  }
+		  else{
+			  document.body.style.cursor = "";
+			  inLink=false;
+		  }
+		}
+
+		//if the link has been clicked, go to link
+		function on_click(e) {
+		  if (inLink)  {
+			window.location = linkText;
+		  }
+		}
+
+		draw();
+
+';
 
 //Coordinates	
 while ($i <= $size/2)
 	{
 		echo
-			'<script>
-				var canvas = document.getElementById("myCanvas");
-				var ctx = canvas.getContext("2d");
+			'
 				ctx.font = "10px Arial";
 				ctx.fillStyle= "white";
 				ctx.fillText("' . $i . '",' . 0 . ',' . $i*32 . ');
 				ctx.fillText("' . $i . '",' . $i*32 . ',' . 0 . ');
-			</script>';
+			';
 			$i++;
 	}
 
@@ -84,14 +146,12 @@ while($row = $lanes->fetch_assoc())
 	$SPY = $row['slocY']*32-16;
 	$SPX = $row['slocX']*32+16;
 	echo
-		'<script>
-			var canvas = document.getElementById("myCanvas");
-			var ctx = canvas.getContext("2d");
+		'
 			ctx.strokeStyle= "white";
 			ctx.moveTo(' . $FPX . ',' . $FPY . ');
 			ctx.lineTo(' . $SPX . ',' . $SPY . ');
 			ctx.stroke();
-		</script>';	
+		';	
 }	
 
 //Planets
@@ -100,17 +160,15 @@ while($row = $location->fetch_assoc())
 {
 		$PY = $row['locY']*32-32;
 	echo
-		'<script>
-			var canvas = document.getElementById("myCanvas");
-			var ctx = canvas.getContext("2d");
-			var img = document.getElementById("planetA");
+		'
 			ctx.font = "15px Arial";
 			ctx.fillStyle= "white";
 			ctx.drawImage(img,' . $row['locX']*32 . ',' . $PY . ');
 			ctx.fillText("' . $row['name'] . '",' . $row['locX']*32 . ',' . $row['locY']*32 . ');
-		</script>';	
+		';	
 }
 
+echo "</script>";
 
 $conn->close();
 ?>

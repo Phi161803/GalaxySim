@@ -12,7 +12,7 @@ namespace ShadowNova
     //Global Values
     static class Global
     {
-        public static int galaxySize = 100; //More than 250 is bad for the frontend right now. It will be fixed.
+        public static int galaxySize = 50; //More than 250 is bad for the frontend right now.
         public static int highPID = 0;
         public static int highHID = 0;
         public static int highHold = 0;
@@ -42,6 +42,9 @@ namespace ShadowNova
             int triggerTick = 0;
             int shutdown = 0;
             int createGal = 0;
+
+
+
             Heartbeat beat = new Heartbeat();
             while(true)
             {
@@ -58,6 +61,7 @@ namespace ShadowNova
                         shutdown = reader.GetInt32(1);
                         createGal = reader.GetInt32(2);
                     }
+                    reader.Close();
 
                     if (triggerTick == 1 || timeCount >= ticktime)
                     {
@@ -72,6 +76,7 @@ namespace ShadowNova
                         Console.WriteLine("Galaxy Creation Triggered");
                         Creation();
                         Save();
+                        break;
                     }
 
                     if (shutdown == 1)
@@ -80,12 +85,11 @@ namespace ShadowNova
                         break;
                     }
 
-                    reader.Close();
                 }
                 System.Threading.Thread.Sleep(timeCheck); //Waits 5 seconds
                 timeCount += timeCheck;
             }
-            dbCon.Close();
+            //dbCon.Close();
             Save();
         }
 
@@ -168,22 +172,12 @@ namespace ShadowNova
             }
             Console.WriteLine("Created Holdings.");
 
-            //Lane Creation, always makes two.
-            Starlane lane;
             for (int i = 0; i < Global.highPID; i++)
             {
-                lane = new Starlane(i);
-                Global.laneList.Add(lane);
-                lane = new Starlane(i);
+                Starlane lane = new Starlane(i);
                 Global.laneList.Add(lane);
             }
 
-            for (int i = Global.highPID; i < 1; i++)
-            {
-               // lane = new Starlane();
-               // Global.laneList.Add(lane);
-            }
-            Console.WriteLine("Created Starlanes.");
 
 
         }
