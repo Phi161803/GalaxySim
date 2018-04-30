@@ -23,40 +23,31 @@ namespace ShadowNova
         //Default Constructor Generates Random Values
         public Starlane()
         {
-            bool[] option = new[] { true, false };
-
-            slid = ++Global.highSLID;
-
-            flocX = Global.planetList[fPlanet].locX;
-            flocY = Global.planetList[fPlanet].locY;
-            slocX = Global.planetList[sPlanet].locX;
-            slocY = Global.planetList[sPlanet].locY;
-            bool test = true;
-
+            bool test;
             do
             {
                 //Randomly generate planets
                 fPlanet = Program.r.Next(1, Global.highPID);
                 sPlanet = Program.r.Next(1, Global.highPID);
+                flocX = Global.planetList[fPlanet].locX;
+                flocY = Global.planetList[fPlanet].locY;
+                slocX = Global.planetList[sPlanet].locX;
+                slocY = Global.planetList[sPlanet].locY;
 
                 //check for intersecting lanes.
                 test = false;
-                for (int i = 0; i < Global.highSLID - 1; i++)
+                for (int i = 0; i < Global.highSLID; i++)
                 {
                     test = laneSect(flocX, flocY, slocX, slocY, Global.laneList[i]);
                     if (test == true) { break; }
                 }
 
-            } while ((Global.laneList.Exists(y => (y.fPlanet == fPlanet) && (y.sPlanet == sPlanet))) &&
+            } while ((Global.laneList.Exists(y => (y.fPlanet == fPlanet) && (y.sPlanet == sPlanet))) ||
                 (Global.laneList.Exists(y => (y.fPlanet == sPlanet) && (y.sPlanet == fPlanet)))
-                && (fPlanet != sPlanet) && test == false);
+                || (fPlanet == sPlanet) || test == true);
+            Console.WriteLine("laneSect: " + test);
 
-
-            flocX = Global.planetList[fPlanet].locX;
-            flocY = Global.planetList[fPlanet].locY;
-            slocX = Global.planetList[sPlanet].locX;
-            slocY = Global.planetList[sPlanet].locY;
-
+            slid = ++Global.highSLID;
             pub = true;
             known = null;
         }
@@ -69,20 +60,35 @@ namespace ShadowNova
 
             //Planet locations
             fPlanet = fpla;
-            sPlanet = Program.r.Next(1, Global.highPID);
-
-            while ((Global.laneList.Exists(y => (y.fPlanet == fPlanet) && (y.sPlanet == sPlanet))) &&
-                (Global.laneList.Exists(y => (y.fPlanet == sPlanet) && (y.sPlanet == fPlanet)))
-                && (fPlanet != sPlanet))
-            {
-                sPlanet = Program.r.Next(1, Global.highPID);
-            }
-
             flocX = Global.planetList[fPlanet].locX;
             flocY = Global.planetList[fPlanet].locY;
-            slocX = Global.planetList[sPlanet].locX;
-            slocY = Global.planetList[sPlanet].locY;
+            bool test;
+            int err = 0;
 
+            do
+            {
+                //Randomly generate planets
+                sPlanet = Program.r.Next(1, Global.highPID);
+                slocX = Global.planetList[sPlanet].locX;
+                slocY = Global.planetList[sPlanet].locY;
+
+                //check for intersecting lanes.
+                test = false;
+                err++;
+                if (err == 100000) throw new Exception();
+                for (int i = 0; i < Global.highSLID - 1; i++)
+                {
+                    test = laneSect(flocX, flocY, slocX, slocY, Global.laneList[i]);
+                    if (test == true) { Console.WriteLine("laneSect: " + test); break; }
+                }
+
+            } while ((Global.laneList.Exists(y => (y.fPlanet == fPlanet) && (y.sPlanet == sPlanet))) ||
+                (Global.laneList.Exists(y => (y.fPlanet == sPlanet) && (y.sPlanet == fPlanet)))
+                || (fPlanet == sPlanet) || test == true);
+
+
+            Console.WriteLine("First PLanet: " + fPlanet);
+            Console.WriteLine("Second PLanet: " + sPlanet);
             pub = true;
             known = null;
         }
@@ -118,10 +124,6 @@ namespace ShadowNova
 
             lineSectAB = lineSegmentTouchesOrCrossesLine(l1, l2);
             lineSectBA = lineSegmentTouchesOrCrossesLine(l2, l1);
-
-            if (boxsect == true && lineSectAB == true && lineSectBA == true)
-                return true;
-            else return false;
 
             return boxsect && lineSectAB && lineSectBA;
 
@@ -231,7 +233,7 @@ namespace ShadowNova
             {
                 Console.WriteLine("Saving Starlane Data to Database");
                 //Planet
-                for (int j = 0; j < Global.laneList.Count(); j++)
+                for (int j = 1; j < Global.laneList.Count(); j++)
                 {
                     //fplanet/splanet not reliable keys, since they can be inversed.
                     query = String.Format("INSERT INTO starlane (slid, fPlanet, flocX, flocY, sPlanet, slocX, slocY, pub)" +

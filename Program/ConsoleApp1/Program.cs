@@ -172,10 +172,19 @@ namespace ShadowNova
             }
             Console.WriteLine("Created Holdings.");
 
-            for (int i = 0; i < Global.highPID; i++)
+            //Starlane lane = new Starlane(4);
+            // Global.laneList.Add(lane);
+            //Console.WriteLine("highSLID: " + Global.highSLID);
+
+
+            for (int i = 1; i <= Global.highPID; i++)
             {
-                Starlane lane = new Starlane(i);
-                Global.laneList.Add(lane);
+                try
+                {
+                    Starlane lane = new Starlane(i);
+                    Global.laneList.Add(lane);
+                }
+                catch { break; }
             }
 
 

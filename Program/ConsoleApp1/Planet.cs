@@ -29,6 +29,7 @@ namespace ShadowNova
         public Planet()
         {
             string[] option;
+            bool test = false;
 
             pid = ++Global.highPID;
             name = "Test" + pid;
@@ -36,10 +37,23 @@ namespace ShadowNova
             //Creates coordinates and checks if they are taken, if so, rerolls them.
             int locXa = Program.r.Next(-Global.galaxySize / 2, Global.galaxySize / 2);
             int locYa = Program.r.Next(-Global.galaxySize / 2, Global.galaxySize / 2);
-            while (Global.planetList.Exists(y => (y.locY == locYa) && (y.locX == locXa)))
+
+
+
+            while ((Global.planetList.Exists(y => (y.locY == locYa) && (y.locX == locXa))) || test == true)
             {
                 locXa = Program.r.Next(-Global.galaxySize / 2, Global.galaxySize / 2);
                 locYa = Program.r.Next(-Global.galaxySize / 2, Global.galaxySize / 2);
+                for (int y = -2; y < 3; y++)
+                {
+                    for (int x = -2; x < 3; x++)
+                    {
+                        if (Global.planetList.Exists(b => (b.locY == locYa + y) && (b.locX == locXa + x)))
+                        {
+                            test = true;
+                        }
+                    }
+                }
             }
             locX = locXa;
             locY = locYa;
@@ -151,7 +165,7 @@ namespace ShadowNova
             {
                 Console.WriteLine("Saving Planet Data to Database");
                 //Planet
-                for (int j = 0; j < Global.planetList.Count(); j++)
+                for (int j = 1; j < Global.planetList.Count(); j++)
                 {
                     query = String.Format("INSERT INTO planet (pid, name, locX, locY, size, terrain, secTerrain, descript," +
                         " expLabour, genLabour, totalPop, minerals, popGrowth, wealth, eduLevel)" +

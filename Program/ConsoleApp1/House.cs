@@ -122,7 +122,7 @@ namespace ShadowNova
             if (dbCon.IsConnect())
             {
                 Console.WriteLine("Saving House Data to Database");
-                for (int j = 0; j < Global.houseList.Count(); j++)
+                for (int j = 1; j < Global.houseList.Count(); j++)
                 {
                     query = String.Format("INSERT INTO house (hid, name, home, quote)" +
                         " VALUES ('{0}', '{1}', '{2}', '{3}') " +
