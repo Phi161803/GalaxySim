@@ -67,6 +67,77 @@ namespace ShadowNova
             int err = 0;
             int dis = 0;
 
+            //Check for distance
+            //dist = true;
+            //dis = (int)Math.Sqrt((flocX - slocX) * (flocX - slocX) + (flocY - slocY) * (flocY - slocY));
+            //if (dis < Program.r.Next(5,15)) { dist = false; }
+
+            bool found = false;
+            for (int d = 1; d < 20; d++)
+            {
+                for(int x = -d; x < d; x++) //Searches in a Ring pattern of size d
+                {
+                    test = false;
+                    if(Global.planetList.Exists(b => (b.locY == flocY + d) && (b.locX == flocX + x))) //Checks upper row
+                    {
+                        sPlanet = Global.planetList.Find(b => (b.locY == flocY + d) && (b.locX == flocX + x)).pid;
+                        slocX = Global.planetList[sPlanet].locX;
+                        slocY = Global.planetList[sPlanet].locY;
+                        found = true;
+                    }
+                    if (Global.planetList.Exists(b => (b.locY == flocY - d) && (b.locX == flocX + x))) //Checks lower row
+                    {
+                        sPlanet = Global.planetList.Find(b => (b.locY == flocY - d) && (b.locX == flocX + x)).pid;
+                        slocX = Global.planetList[sPlanet].locX;
+                        slocY = Global.planetList[sPlanet].locY;
+                        found = true;
+                    }
+                    if (Global.planetList.Exists(b => (b.locY == flocY + x) && (b.locX == flocX + d))) //checks right columns
+                    {
+                        sPlanet = Global.planetList.Find(b => (b.locY == flocY + x) && (b.locX == flocX + d)).pid;
+                        slocX = Global.planetList[sPlanet].locX;
+                        slocY = Global.planetList[sPlanet].locY;
+                        found = true;
+                    }
+                    if (Global.planetList.Exists(b => (b.locY == flocY - x) && (b.locX == flocX - d))) //checks left column
+                    { 
+                        sPlanet = Global.planetList.Find(b => (b.locY == flocY - x) && (b.locX == flocX - d)).pid;
+                        slocX = Global.planetList[sPlanet].locX;
+                        slocY = Global.planetList[sPlanet].locY;
+                        found = true;
+                    }
+                    if ((Global.laneList.Exists(y => (y.fPlanet == fPlanet) && (y.sPlanet == sPlanet))) //Does the lane already exist
+                        || (Global.laneList.Exists(y => (y.fPlanet == sPlanet) && (y.sPlanet == fPlanet))) || (fPlanet == sPlanet))
+                    {
+                        found = false;
+                        Console.WriteLine("Lane Exists.");
+                    }
+                    if (sPlanet == 0) //There is no 0 planet.
+                    {
+                        found = false;
+                    }
+                    /*
+                    if (found == true) //Check for intersections
+                    {
+                        for (int i = 0; i < Global.highSLID; i++)
+                        {
+                            test = laneSect(flocX, flocY, slocX, slocY, Global.laneList[i]);
+                            if (test == true) { found = false; break; }
+                        }
+                    }
+                    */
+
+                    if (found == true) break;
+                }
+                if (found == true) break;
+            }
+            if (found == false)
+            {
+                Console.WriteLine("Could not Find Match");
+            }
+
+
+            /*
             do
             {
                 //Randomly generate planets
@@ -74,11 +145,8 @@ namespace ShadowNova
                 slocX = Global.planetList[sPlanet].locX;
                 slocY = Global.planetList[sPlanet].locY;
 
-                //Check for distance
-                dist = false;
-                dis = (int)Math.Sqrt((flocX - slocX) * (flocX - slocX) + (flocY - slocY) * (flocY - slocY));
-                if (dis > Program.r.Next(1,15)) { dist = true; continue; }
-               
+
+
                 //check for intersecting lanes.
                 test = false;
                 err++;
@@ -92,7 +160,7 @@ namespace ShadowNova
             } while ((Global.laneList.Exists(y => (y.fPlanet == fPlanet) && (y.sPlanet == sPlanet))) ||
                 (Global.laneList.Exists(y => (y.fPlanet == sPlanet) && (y.sPlanet == fPlanet)))
                 || (fPlanet == sPlanet) || test == true || dist == true);
-
+                */
 
             Console.WriteLine("First PLanet: " + fPlanet);
             Console.WriteLine("Second PLanet: " + sPlanet);

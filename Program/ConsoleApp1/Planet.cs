@@ -29,7 +29,7 @@ namespace ShadowNova
         public Planet()
         {
             string[] option;
-            bool test = false;
+            bool test = true;
 
             pid = ++Global.highPID;
             name = "Test" + pid;
@@ -38,10 +38,9 @@ namespace ShadowNova
             int locXa = Program.r.Next(-Global.galaxySize / 2, Global.galaxySize / 2);
             int locYa = Program.r.Next(-Global.galaxySize / 2, Global.galaxySize / 2);
 
-
-
             while ((Global.planetList.Exists(y => (y.locY == locYa) && (y.locX == locXa))) || test == true)
             {
+                test = false;
                 locXa = Program.r.Next(-Global.galaxySize / 2, Global.galaxySize / 2);
                 locYa = Program.r.Next(-Global.galaxySize / 2, Global.galaxySize / 2);
                 for (int y = -2; y < 3; y++)

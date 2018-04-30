@@ -137,7 +137,7 @@ namespace ShadowNova
         public static void Creation()
         {
             //Populating Galaxy with Random Planets
-            int planets = Global.galaxySize * Global.galaxySize / 100;
+            int planets = Global.galaxySize * Global.galaxySize / 75;
             Planet newPlanet;
             for (int i = Global.highPID; i < planets; i++)
             {
@@ -179,12 +179,8 @@ namespace ShadowNova
 
             for (int i = 1; i <= Global.highPID; i++)
             {
-                try
-                {
                     Starlane lane = new Starlane(i);
                     Global.laneList.Add(lane);
-                }
-                catch { break; }
             }
 
 
