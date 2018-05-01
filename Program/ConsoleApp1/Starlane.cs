@@ -45,7 +45,7 @@ namespace ShadowNova
             } while ((Global.laneList.Exists(y => (y.fPlanet == fPlanet) && (y.sPlanet == sPlanet))) ||
                 (Global.laneList.Exists(y => (y.fPlanet == sPlanet) && (y.sPlanet == fPlanet)))
                 || (fPlanet == sPlanet) || test == true);
-            Console.WriteLine("laneSect: " + test);
+            //Console.WriteLine("laneSect: " + test);
 
             slid = ++Global.highSLID;
             pub = true;
@@ -110,7 +110,7 @@ namespace ShadowNova
                         || (Global.laneList.Exists(y => (y.fPlanet == sPlanet) && (y.sPlanet == fPlanet))) || (fPlanet == sPlanet))
                     {
                         found = false;
-                        Console.WriteLine("Lane Exists.");
+                        //Console.WriteLine("Lane Exists.");
                     }
                     if (sPlanet == 0) //There is no 0 planet.
                     {
@@ -119,7 +119,7 @@ namespace ShadowNova
                     /*
                     if (found == true) //Check for intersections
                     {
-                        for (int i = 0; i < Global.highSLID; i++)
+                        for (int i = 1; i < Global.highSLID-1; i++)
                         {
                             test = laneSect(flocX, flocY, slocX, slocY, Global.laneList[i]);
                             if (test == true) { found = false; break; }
@@ -162,8 +162,8 @@ namespace ShadowNova
                 || (fPlanet == sPlanet) || test == true || dist == true);
                 */
 
-            Console.WriteLine("First PLanet: " + fPlanet);
-            Console.WriteLine("Second PLanet: " + sPlanet);
+            //Console.WriteLine("First PLanet: " + fPlanet);
+           // Console.WriteLine("Second PLanet: " + sPlanet);
             pub = true;
             known = null;
         }

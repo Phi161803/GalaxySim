@@ -24,6 +24,9 @@ namespace ShadowNova
         public int popGrowth;
         public int wealth;
         public int eduLevel;
+        public int foodReserve;
+        public int mineralReserve;
+        public int energyReserve;
 
         //Default Constructor Generates Random Values
         public Planet()
@@ -34,7 +37,7 @@ namespace ShadowNova
             pid = ++Global.highPID;
             name = "Test" + pid;
 
-            //Creates coordinates and checks if they are taken, if so, rerolls them.
+            //Creates coordinates, if there is a planet within 2 squares of it, rerolls.
             int locXa = Program.r.Next(-Global.galaxySize / 2, Global.galaxySize / 2);
             int locYa = Program.r.Next(-Global.galaxySize / 2, Global.galaxySize / 2);
 
@@ -57,7 +60,7 @@ namespace ShadowNova
             locX = locXa;
             locY = locYa;
 
-            size = Program.r.Next(1, 10);
+
 
             //Terrain Generation
             option = new[] { "Arid", "Desert", "Savanna", "Alpine", "Arctic", "Tundra", "Continental", "Ocean", "Tropical" };
@@ -66,6 +69,7 @@ namespace ShadowNova
             secTerrain = option[Program.r.Next(0, 10)];
 
             //General Stats
+            size = Program.r.Next(1, 10);
             descript = "The Planet was the " + pid + "th planet to be created.";
             expLabour = Program.r.Next(1, 10);
             genLabour = Program.r.Next(1, 10);
@@ -74,11 +78,14 @@ namespace ShadowNova
             popGrowth = Program.r.Next(1, 10); //probably a factor of food surplus right now
             wealth = Program.r.Next(1, 10); //Not sure how to calc
             eduLevel = Program.r.Next(1, 10); //Not likely to matter in the end.
+            foodReserve = Program.r.Next(100, 1000);
+            mineralReserve = Program.r.Next(100, 1000);
+            energyReserve = Program.r.Next(100, 1000);
         }
 
         //If you have a specific planet that you want created, lets you feed everything in.
         public Planet(int pid, string name, int locX, int locY, int size, string terrain, string secTerrain, string descript, int expLabour
-            , int genLabour, int totalPop, int minerals, int popGrowth, int wealth, int eduLevel)
+            , int genLabour, int totalPop, int minerals, int popGrowth, int wealth, int eduLevel, int foodReserve, int mineralReserve, int energyReserve)
         {
             this.pid = pid;
             this.name = name;
@@ -95,6 +102,9 @@ namespace ShadowNova
             this.popGrowth = popGrowth;
             this.wealth = wealth;
             this.eduLevel = eduLevel;
+            this.foodReserve = foodReserve;
+            this.mineralReserve = mineralReserve;
+            this.energyReserve = energyReserve;
         }
 
         //Helper for save and load functions. Not strictly required, but nice way to create a dummy.
@@ -115,6 +125,9 @@ namespace ShadowNova
             this.popGrowth = 0;
             this.wealth = 0;
             this.eduLevel = 0;
+            this.foodReserve = 0;
+            this.mineralReserve = 0;
+            this.energyReserve = 0;
         }
 
         public void print()
@@ -131,7 +144,7 @@ namespace ShadowNova
             {
                 Console.WriteLine("Loading Planet Data");
                 string query = "SELECT pid, name, locX, locY, size, terrain, secTerrain, descript, expLabour, " +
-                    "genLabour, totalPop, minerals, popGrowth, wealth, eduLevel FROM planet"; //Looking for current highest pid.
+                    "genLabour, totalPop, minerals, popGrowth, wealth, eduLevel, foodReserve, mineralReserve, energyReserve FROM planet"; //Looking for current highest pid.
                 var cmd = new MySqlCommand(query, dbCon.Connection);
                 var reader = cmd.ExecuteReader();
                 Planet planet;
@@ -143,7 +156,8 @@ namespace ShadowNova
                     reader.GetString(5), reader.GetString(6), reader.GetString(7),
                     reader.GetInt32(8), reader.GetInt32(9), reader.GetInt32(10),
                     reader.GetInt32(11), reader.GetInt32(12), reader.GetInt32(13),
-                    reader.GetInt32(14));
+                    reader.GetInt32(14), reader.GetInt32(15), reader.GetInt32(16),
+                    reader.GetInt32(17));
                     Global.planetList.Add(planet);
                     Global.highPID = reader.GetInt32(0);
                 }
@@ -167,8 +181,8 @@ namespace ShadowNova
                 for (int j = 1; j < Global.planetList.Count(); j++)
                 {
                     query = String.Format("INSERT INTO planet (pid, name, locX, locY, size, terrain, secTerrain, descript," +
-                        " expLabour, genLabour, totalPop, minerals, popGrowth, wealth, eduLevel)" +
-                        " VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}') " +
+                        " expLabour, genLabour, totalPop, minerals, popGrowth, wealth, eduLevel, foodReserve, mineralReserve, energyReserve)" +
+                        " VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}', '{15}', '{16}' , '{17}') " +
                         "ON DUPLICATE KEY UPDATE " +
                         "name='{1}', " +
                         "locX='{2}', " +
@@ -183,7 +197,10 @@ namespace ShadowNova
                         "minerals='{11}', " +
                         "popGrowth='{12}', " +
                         "wealth='{13}', " +
-                        "eduLevel='{14}'",
+                        "eduLevel='{14}', " +
+                        "foodReserve='{15}', " +
+                        "mineralReserve='{16}', " +
+                        "energyReserve='{17}'",
                         Global.planetList[j].pid,
                         Global.planetList[j].name,
                         Global.planetList[j].locX,
@@ -198,7 +215,10 @@ namespace ShadowNova
                         Global.planetList[j].minerals,
                         Global.planetList[j].popGrowth,
                         Global.planetList[j].wealth,
-                        Global.planetList[j].eduLevel);
+                        Global.planetList[j].eduLevel,
+                        Global.planetList[j].foodReserve,
+                        Global.planetList[j].mineralReserve,
+                        Global.planetList[j].energyReserve);
                     cmd = new MySqlCommand(query, dbCon.Connection);
                     cmd.ExecuteNonQuery();
                 }

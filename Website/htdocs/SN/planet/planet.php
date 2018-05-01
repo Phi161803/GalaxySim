@@ -43,14 +43,18 @@ if ($conn->connect_error) {
 <body>
 <?php //Planet Stats
 $pid = $_GET['varname'];
-$result = $conn->query("SELECT name, locX, locY, size, terrain, secTerrain, descript, expLabour, genLabour, totalPop, minerals, popGrowth, wealth, eduLevel FROM planet WHERE pid = $pid");
+$result = $conn->query("SELECT name, locX, locY, size, terrain, secTerrain, descript, expLabour, genLabour, totalPop, minerals, popGrowth, wealth, eduLevel, foodReserve, energyReserve, mineralReserve FROM planet WHERE pid = $pid");
 $planet = $result->fetch_assoc();
 echo '<a href="planet_edit.php?varname=' . $pid . '">Edit Planet</a><br>';
 echo "<h1>" . $planet["name"] . "</h1>";
 echo "Type: A " . $planet["secTerrain"] . " " . $planet["terrain"] . " world." . "<br>";
 echo "Description: " . $planet["descript"] . "<br>";
 echo "Coordinates: X:" . $planet["locX"] . " Y:" . $planet["locY"];
+
 echo "<h2>Stats:</h2>";
+echo "Food Reserves: " . $planet["foodReserve"] . "<br>";
+echo "Mineral Reserves: " . $planet["energyReserve"] . "<br>";
+echo "Energy Reserves: " . $planet["mineralReserve"] . "<br>";
 echo "Expert Labour: " . $planet["expLabour"] . "<br>";
 echo "General Labour: " . $planet["genLabour"] . "<br>";
 echo "Total Population: " . $planet["totalPop"] . "<br>";

@@ -65,14 +65,24 @@ namespace ShadowNova
 
                     if (triggerTick == 1 || timeCount >= ticktime)
                     {
-                        if (triggerTick == 1) Console.WriteLine("Manual Tick Triggered");
+                        if (triggerTick == 1)
+                        {
+                            Console.WriteLine("Manual Tick Triggered");
+                            query = String.Format("UPDATE setting SET manualTick='0'");
+                            cmd = new MySqlCommand(query, dbCon.Connection);
+                            cmd.ExecuteNonQuery();
+                        }
                         else Console.WriteLine("Tick Timer Trigger");
                         beat.beat();
                         timeCount = 0;
+                        continue;
                     }
 
                     if (createGal == 1)
                     {
+                        query = String.Format("UPDATE setting SET createGal='0'");
+                        cmd = new MySqlCommand(query, dbCon.Connection);
+                        cmd.ExecuteNonQuery();
                         Console.WriteLine("Galaxy Creation Triggered");
                         Creation();
                         Save();
@@ -81,6 +91,9 @@ namespace ShadowNova
 
                     if (shutdown == 1)
                     {
+                        query = String.Format("UPDATE setting SET shutdown='0'");
+                        cmd = new MySqlCommand(query, dbCon.Connection);
+                        cmd.ExecuteNonQuery();
                         Console.WriteLine("Shutdown Triggered");
                         break;
                     }

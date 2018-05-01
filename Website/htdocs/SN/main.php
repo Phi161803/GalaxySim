@@ -42,8 +42,6 @@ data {
 	padding: 0.5%;
 	background-color: darkred;
 }
-
-
 </style>
 </head>
 <body>

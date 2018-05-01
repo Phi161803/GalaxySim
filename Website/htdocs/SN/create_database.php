@@ -65,10 +65,9 @@ if ($conn->connect_error) {
 	popGrowth INT(10) UNSIGNED NOT NULL,
 	wealth INT(10) UNSIGNED NOT NULL,
 	eduLevel INT(10) UNSIGNED NOT NULL,
-	planet_stock INT(10) UNSIGNED NOT NULL,
-	planet_holding INT(10) UNSIGNED NOT NULL,
-	planet_units INT(10) UNSIGNED NOT NULL,
-	planet_hidden INT(10) UNSIGNED NOT NULL,
+	foodReserve INT(10) UNSIGNED NOT NULL,
+	mineralReserve INT(10) UNSIGNED NOT NULL,
+	energyReserve INT(10) UNSIGNED NOT NULL,
 	reg_date TIMESTAMP
 	)";
 
@@ -346,8 +345,8 @@ if ($conn->connect_error) {
 
 //TEST DATA for PLANET
 	$sql = "INSERT INTO planet (pid, name, locX, locY, size, terrain, secTerrain, 
-	descript, expLabour, genLabour, totalPop, minerals, popGrowth, wealth, eduLevel, planet_stock, planet_holding, planet_units)
-	VALUES (1, 'POne', 5, 0, 3, 'Verdant', 'Overgrown', 'The first world.', 5, 7, 20, 5, 5, 5, 5, 1, 1, 1)";
+	descript, expLabour, genLabour, totalPop, minerals, popGrowth, wealth, eduLevel, foodReserve, mineralReserve, energyReserve)
+	VALUES (1, 'POne', 5, 0, 3, 'Verdant', 'Overgrown', 'The first world.', 5, 7, 20, 5, 5, 5, 5, 500, 500, 500)";
 
 	if ($conn->query($sql) === TRUE) {
 		echo "<BR>New planet created successfully";
@@ -356,8 +355,8 @@ if ($conn->connect_error) {
 	}
 	
 	$sql = "INSERT INTO planet (pid, name, locX, locY, size, terrain, secTerrain, 
-	descript, expLabour, genLabour, totalPop, minerals, popGrowth, wealth, eduLevel, planet_stock, planet_holding, planet_units)
-	VALUES (2, 'PTwo', 14, 15, 3, 'Frozen', 'Icey', 'The second world.', 5, 7, 20, 5, 5, 5, 5, 2, 2, 2)";
+	descript, expLabour, genLabour, totalPop, minerals, popGrowth, wealth, eduLevel, foodReserve, mineralReserve, energyReserve)
+	VALUES (2, 'PTwo', 14, 15, 3, 'Frozen', 'Icey', 'The second world.', 5, 7, 20, 5, 5, 5, 5, 500, 500, 500)";
 
 	if ($conn->query($sql) === TRUE) {
 		echo "<BR>New planet created successfully";
@@ -366,8 +365,8 @@ if ($conn->connect_error) {
 	}
 	
 	$sql = "INSERT INTO planet (pid, name, locX, locY, size, terrain, secTerrain, 
-	descript, expLabour, genLabour, totalPop, minerals, popGrowth, wealth, eduLevel, planet_stock, planet_holding, planet_units)
-	VALUES (3, 'PThree', 0, 14, 3, 'Desert', 'Hot', 'The Third world.', 5, 7, 20, 5, 5, 5, 5, 3, 3, 3)";
+	descript, expLabour, genLabour, totalPop, minerals, popGrowth, wealth, eduLevel, foodReserve, mineralReserve, energyReserve)
+	VALUES (3, 'PThree', 0, 14, 3, 'Desert', 'Hot', 'The Third world.', 5, 7, 20, 5, 5, 5, 5, 500, 500, 500)";
 
 	if ($conn->query($sql) === TRUE) {
 		echo "<BR>New planet created successfully";
@@ -376,8 +375,8 @@ if ($conn->connect_error) {
 	}
 	
 		$sql = "INSERT INTO planet (pid, name, locX, locY, size, terrain, secTerrain, 
-	descript, expLabour, genLabour, totalPop, minerals, popGrowth, wealth, eduLevel, planet_stock, planet_holding, planet_units)
-	VALUES (4, 'PFour', 5, 15, 3, 'Desert', 'Hot', 'The Fourth world.', 5, 7, 20, 5, 5, 5, 5, 3, 3, 3)";
+	descript, expLabour, genLabour, totalPop, minerals, popGrowth, wealth, eduLevel, foodReserve, mineralReserve, energyReserve)
+	VALUES (4, 'PFour', 5, 15, 3, 'Desert', 'Hot', 'The Fourth world.', 5, 7, 20, 5, 5, 5, 5, 500, 500, 500)";
 
 	if ($conn->query($sql) === TRUE) {
 		echo "<BR>New planet created successfully";

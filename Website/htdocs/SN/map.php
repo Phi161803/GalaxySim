@@ -4,16 +4,8 @@
 <head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <style>
-table {
-	width: 100%;
-	text-align: center;
-	border: 1px solid red;
-	color: white;
-	
-}
-td, th, tr{
-	padding: 2px
-	border: 1px solid red;
+html {
+overflow:hidden;
 }
 </style>
 </head>
@@ -43,7 +35,7 @@ if ($conn->connect_error) {
 
 
 <?php
-	$size = 50;
+	$size = 52;
 	$X = $size/2;
 	$Y = $size/2;
 	$i = -$size/2;
