@@ -45,9 +45,22 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-
 //CREATE TABLE
 //========================
+//USER TABLE
+	$sql = "CREATE TABLE users (
+	uid INT(10) UNSIGNED PRIMARY KEY,
+	username VARCHAR(20) NOT NULL,
+	passhash VARCHAR(255) NOT NULL,
+	reg_date TIMESTAMP
+	)";
+	
+	if ($conn->query($sql) === TRUE) {
+		echo "<BR>Table users created successfully.";
+	} else {
+		echo "<BR>Error creating table: " . $conn->error;
+	}
+	
 //PLANET TABLE
 	$sql = "CREATE TABLE planet (
 	pid INT(10) UNSIGNED PRIMARY KEY,
@@ -320,6 +333,16 @@ if ($conn->connect_error) {
 
 	if ($conn->query($sql) === TRUE) {
 		echo "<BR>Settings created successfully";
+	} else {
+		echo "<BR>Error: " . $sql . "<br>" . $conn->error;
+	}
+
+//TEST DATA for USERS
+	$sql = "INSERT INTO users (uid, username, passhash)
+	VALUES (1, 'example', '" . password_hash("password", PASSWORD_DEFAULT) . "')";
+	
+	if ($conn->query($sql) === TRUE) {
+		echo "<BR>New User created successfully";
 	} else {
 		echo "<BR>Error: " . $sql . "<br>" . $conn->error;
 	}
