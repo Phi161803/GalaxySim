@@ -42,10 +42,10 @@ namespace ShadowNova
             energy = Program.r.Next(1, 500);
 
             //Upgrades
-            farm = option[Program.r.Next(0, 1)];
-            mining = option[Program.r.Next(0, 1)];
-            power = option[Program.r.Next(0, 1)];
-            fort = option[Program.r.Next(0, 1)];
+            farm = option[Program.r.Next(0, 2)];
+            mining = option[Program.r.Next(0, 2)];
+            power = option[Program.r.Next(0, 2)];
+            fort = option[Program.r.Next(0, 2)];
             Global.highHold++;
         }
 
@@ -141,16 +141,23 @@ namespace ShadowNova
                         Global.holdingList[j].food,
                         Global.holdingList[j].rawMat,
                         Global.holdingList[j].energy,
-                        Global.holdingList[j].farm,
-                        Global.holdingList[j].mining,
-                        Global.holdingList[j].power,
-                        Global.holdingList[j].fort);
+                        Convert(Global.holdingList[j].farm),
+                        Convert(Global.holdingList[j].mining),
+                        Convert(Global.holdingList[j].power),
+                        Convert(Global.holdingList[j].fort));
                     cmd = new MySqlCommand(query, dbCon.Connection);
                     cmd.ExecuteNonQuery();
                 }
                 Console.WriteLine("Holding Data Saved.");
                 dbCon.Close();
             }
+        }
+
+        public int Convert(bool a)
+        {
+            if (a == false) { return 0; }
+            if (a == true) { return 1; }
+            return 0;
         }
     }
 }

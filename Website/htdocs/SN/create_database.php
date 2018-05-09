@@ -327,6 +327,31 @@ if ($conn->connect_error) {
 		echo "<BR>Error creating table: " . $conn->error;
 	}
 	
+	
+//Military Unit TABLE
+	$sql = "CREATE TABLE militaryunit (
+	mid INT(10) UNSIGNED PRIMARY KEY,
+	owner INT(10) NOT NULL,
+	commander INT(10) NOT NULL,
+	defMob BOOL NOT NULL,
+	type BOOL NOT NULL,
+	points INT(10) NOT NULL,
+	exp INT(10) NOT NULL,
+	active BOOL NOT NULL,
+	camp INT(10) NOT NULL,
+	reg_date TIMESTAMP
+	)";
+	//gender 1 FEMALE, 0 MALE
+	//birth currently being used as a straight age number, until dating system is implemented.
+	//preg 0 NOT PREG, cid IF PREG
+	//pos 1 HEAD, LIST THESE LATER
+	
+	
+	if ($conn->query($sql) === TRUE) {
+		echo "<BR>Table militaryunit created successfully.";
+	} else {
+		echo "<BR>Error creating table: " . $conn->error;
+	}
 //=============================TEST DATA=================================
 //TEST DATA for SETTING
 	$sql = "INSERT INTO setting (manualTick, shutdown, createGal)

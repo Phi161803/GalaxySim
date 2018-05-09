@@ -18,12 +18,15 @@ namespace ShadowNova
         public static int highHold = 0;
         public static int highSLID = 0;
         public static int highCID = 0;
+        public static int highMID = 0;
         public static List<Planet> planetList = new List<Planet>();
         public static List<House> houseList = new List<House>();
         public static List<Holding> holdingList = new List<Holding>();
         public static List<Starlane> laneList = new List<Starlane>();
         public static List<Actor> actorList = new List<Actor>();
+        public static List<MilitaryUnit> unitList = new List<MilitaryUnit>();
         public static Planet[] pla = new Planet[10000];
+        
     }
 
 
@@ -129,6 +132,9 @@ namespace ShadowNova
 
             Actor act = new Actor(false);
             act.loadActor();
+
+            MilitaryUnit unit = new MilitaryUnit(false);
+            unit.loadMilitaryUnit();
         }
 
         //Save function
@@ -144,6 +150,8 @@ namespace ShadowNova
             lane.saveStarlane();
             Actor act = new Actor(false);
             act.saveActor();
+            MilitaryUnit unit = new MilitaryUnit(false);
+            unit.loadMilitaryUnit();
         }
 
         //Creates a new galaxy with random spawns, good for testing.
@@ -199,6 +207,8 @@ namespace ShadowNova
 
 
         }
+
+
 
 
     }
