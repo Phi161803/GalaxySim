@@ -52,5 +52,6 @@ Testing Control Panel<br>
 <button onclick="update('manualTick')">Manual Tick</button>
 <button onclick="update('createGal')">Create Galaxy</button>
 <button onclick="update('shutdown')">Shutdown</button>
+<button onclick="golink('logout')">Log Out</button>
 </body>
 </html>

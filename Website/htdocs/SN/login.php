@@ -6,7 +6,7 @@
 <?php
 session_start();
 //$_SESSION["user ID"] = 1;
-//$user = $_SESSION["user ID"];
+//$uid = $_SESSION["user ID"];
 $servername = "localhost";
 $username = "root";
 $password = NULL;
@@ -20,6 +20,8 @@ if ($conn->connect_error) {
 }
 ?> 
 <!-- End Boilerplate -->
+
+<h1>Welcome to Shadow Nova</h1>
 
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST")
@@ -37,15 +39,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 			$_SESSION["user ID"] = $user->uid;
 			echo "Thank you " . $_POST['uname'] . " for logging in. <br> Click to <a href=\"/SN/house.php?varname=1\">Continue</a>";
 		} else {
-			echo "<p>Invalid username or password.</p>";
+			echo "Invalid username or password.";
 		}
 }
 ?>
 
-<?php if (isset($_SESSION["user ID"])): ?>
-<h1>Welcome to Shadow Nova</h1>
-<?php else: ?>
-<h1>You are not logged in</h1>
+<?php if (!isset($_SESSION["user ID"])): ?>
+<h2>You are not logged in</h2>
 
 <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
 	<input type="text" id="uname" name="uname" value="example" required><br>

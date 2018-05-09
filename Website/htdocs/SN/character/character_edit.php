@@ -25,8 +25,8 @@ spacer {
 <!-- Boilerplate -->
 <?php
 session_start();
-$_SESSION["user ID"] = 1;
-$user = $_SESSION["user ID"];
+//$_SESSION["user ID"] = 1;
+//$uid = $_SESSION["user ID"];
 $servername = "localhost";
 $username = "root";
 $password = NULL;
@@ -49,24 +49,28 @@ $character = $result->fetch_assoc();
 echo '<a href="character.php?varname=' . $cid . '">Back to Character</a><br>';
 
 echo '<h2>Editable Stats:</h2>';
-echo '<input type="hidden" id="cid" value="' . $cid . '">';
-echo 'Name: <input type="text" id="name" value="' . $character["name"] . '"><br>';
-echo 'Born on : <input type="text" id="birth" value=' . $character["birth"] . '><br>';
-echo 'Description: <input type="text" id="descript" value="' . $character["descript"] . '"><br>';
-echo 'Gender: <input type="text" id="gender" value=' . (($character["gender"] == 0)?("male"):("female")) . '><br>';
-echo 'Health: <input type="text" id="health"" value=' . $character["health"] . '><br>';
-echo 'Brawn: <input type="text" id="brawn" value=' . $character["brawn"] . '><br>';
-echo 'Intelligence: <input type="text" id="intel" value=' . $character["intel"] . '><br>';
-echo 'Charisma: <input type="text" id="charisma" value=' . $character["charisma"] . '><br>';
-echo 'Military Experience: <input type="text" id="expMilitary" value=' . $character["expMilitary"] . '><br>';
-echo 'Admin Experience: <input type="text" id="expAdmin" value=' . $character["expAdmin"] . '><br>';
-echo 'Pregnant: <input type="text" id="preg" value=' . $character["preg"] . '><br>';
-echo 'PregnantStart: <input type="text" id="pregStart" value=' . $character["pregStart"] . '><br>';
-echo 'Currently On: <input type="text" id="loc" value=' . $character["loc"] . '><br>';
-echo 'Position in the House: <input type="text" id="pos" value=' . $character["pos"] . '><br>';
-echo 'Controlled by: <input type="text" id="owner" value=' . $character["owner"] . '><br>';
+if (!isset($_SESSION["user ID"])) {
+	echo 'You are not logged in! Please <a href="/SN/login.php">log in</a> to edit characters.';
+} else {
+	echo '<input type="hidden" id="cid" value="' . $cid . '">';
+	echo 'Name: <input type="text" id="name" value="' . $character["name"] . '"><br>';
+	echo 'Born on : <input type="text" id="birth" value=' . $character["birth"] . '><br>';
+	echo 'Description: <input type="text" id="descript" value="' . $character["descript"] . '"><br>';
+	echo 'Gender: <input type="text" id="gender" value=' . (($character["gender"] == 0)?("male"):("female")) . '><br>';
+	echo 'Health: <input type="text" id="health"" value=' . $character["health"] . '><br>';
+	echo 'Brawn: <input type="text" id="brawn" value=' . $character["brawn"] . '><br>';
+	echo 'Intelligence: <input type="text" id="intel" value=' . $character["intel"] . '><br>';
+	echo 'Charisma: <input type="text" id="charisma" value=' . $character["charisma"] . '><br>';
+	echo 'Military Experience: <input type="text" id="expMilitary" value=' . $character["expMilitary"] . '><br>';
+	echo 'Admin Experience: <input type="text" id="expAdmin" value=' . $character["expAdmin"] . '><br>';
+	echo 'Pregnant: <input type="text" id="preg" value=' . $character["preg"] . '><br>';
+	echo 'PregnantStart: <input type="text" id="pregStart" value=' . $character["pregStart"] . '><br>';
+	echo 'Currently On: <input type="text" id="loc" value=' . $character["loc"] . '><br>';
+	echo 'Position in the House: <input type="text" id="pos" value=' . $character["pos"] . '><br>';
+	echo 'Controlled by: <input type="text" id="owner" value=' . $character["owner"] . '><br>';
 ?>
 <button type="submit" id="update">Update</button>
+<?php } ?>
 
 
 <script>

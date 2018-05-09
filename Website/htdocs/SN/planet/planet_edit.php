@@ -25,8 +25,8 @@ spacer {
 <!-- Boilerplate -->
 <?php
 session_start();
-$_SESSION["user ID"] = 1;
-$user = $_SESSION["user ID"];
+//$_SESSION["user ID"] = 1;
+//$uid = $_SESSION["user ID"];
 $servername = "localhost";
 $username = "root";
 $password = NULL;
@@ -53,20 +53,24 @@ echo '<a href="planet.php?varname=' . $pid . '">Back to Planet</a><br>';
 <h2>Editable Stats:</h2>
 
 <?php
-echo '<input type="hidden" id="pid" value="' . $pid . '">';
-echo 'Name: <input type="text" id="name" value="' . $planet["name"] . '"><br>';
-echo 'Primary Type: <input type="text" id="terrain" value="' . $planet["terrain"] . '"><br>';
-echo 'Secondary Type: <input type="text" id="secTerrain" value="' . $planet["secTerrain"] . '"><br>';
-echo 'Description: <input type="text" id="descript" value="' . $planet["descript"] . '"><br>';
-echo 'Expert Labour: <input type="text" id="expLabour" value=' . $planet["expLabour"] . '><br>';
-echo 'General Labour: <input type="text" id="genLabour" value=' . $planet["genLabour"] . '><br>';
-echo 'Total Population: <input type="text" id="totalPop" value=' . $planet["totalPop"] . '><br>';
-echo 'Mineral Deposits: <input type="text" id="minerals" value=' . $planet["minerals"] . '><br>';
-echo 'Population Growth: <input type="text" id="popGrowth" value=' . $planet["popGrowth"] . '><br>';
-echo 'Wealth: <input type="text" id="wealth" value=' . $planet["wealth"] . '><br>';
-echo 'Education Level: <input type="text" id="eduLevel" value=' . $planet["eduLevel"] . '><br>';
+if (!isset($_SESSION["user ID"])) {
+	echo 'You are not logged in! Please <a href="/SN/login.php">log in</a> to edit planets.';
+} else {
+	echo '<input type="hidden" id="pid" value="' . $pid . '">';
+	echo 'Name: <input type="text" id="name" value="' . $planet["name"] . '"><br>';
+	echo 'Primary Type: <input type="text" id="terrain" value="' . $planet["terrain"] . '"><br>';
+	echo 'Secondary Type: <input type="text" id="secTerrain" value="' . $planet["secTerrain"] . '"><br>';
+	echo 'Description: <input type="text" id="descript" value="' . $planet["descript"] . '"><br>';
+	echo 'Expert Labour: <input type="text" id="expLabour" value=' . $planet["expLabour"] . '><br>';
+	echo 'General Labour: <input type="text" id="genLabour" value=' . $planet["genLabour"] . '><br>';
+	echo 'Total Population: <input type="text" id="totalPop" value=' . $planet["totalPop"] . '><br>';
+	echo 'Mineral Deposits: <input type="text" id="minerals" value=' . $planet["minerals"] . '><br>';
+	echo 'Population Growth: <input type="text" id="popGrowth" value=' . $planet["popGrowth"] . '><br>';
+	echo 'Wealth: <input type="text" id="wealth" value=' . $planet["wealth"] . '><br>';
+	echo 'Education Level: <input type="text" id="eduLevel" value=' . $planet["eduLevel"] . '><br>';
 ?>
 <button type="submit" id="update">Update</button>
+<?php } ?>
 
 
 <script>

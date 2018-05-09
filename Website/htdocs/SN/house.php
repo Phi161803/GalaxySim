@@ -24,8 +24,8 @@ spacer {
 <!-- Boilerplate -->
 <?php
 session_start();
-$_SESSION["user ID"] = 1;
-$user = $_SESSION["user ID"];
+//$_SESSION["user ID"] = 1;
+//$uid = $_SESSION["user ID"];
 $servername = "localhost";
 $username = "root";
 $password = NULL;
@@ -46,12 +46,28 @@ if ($conn->connect_error) {
 	else {$hid = $_GET['varname'];}
 ?>
 
+<?php //Check if the user owns this house
+$your_house = false;
+if (isset($_SESSION['user ID'])){
+	$uid = $_SESSION['user ID'];
+	$result = $conn->query("SELECT hid FROM users WHERE uid = $uid");
+	if ($result->num_rows > 0) {
+		while($row = $result->fetch_assoc()) {
+			if ($row["hid"] == $hid) {$your_house = true;}
+		}
+	}
+}
+?>
+
 <?php //House Name
 $result = $conn->query("SELECT name FROM house WHERE hid = $hid");
 if ($result->num_rows > 0) { while($row = $result->fetch_assoc()) {echo "<h1 id=name_val>" . $row["name"] . "</h1>";}}
 else { echo "<h1>An Unknown House.";}
 ?>
+
+<?php if($your_house) { ?>
 <input type='button' class="edit_button" id="edit_button<?php echo $row['name'];?>" value="edit" onclick="edit_name('<?php echo $row['name'];?>');">
+<?php } ?>
 
 
 

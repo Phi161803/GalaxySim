@@ -12,9 +12,9 @@ overflow:hidden;
 
 <!-- Boilerplate -->
 <?php
-//session_start();
+session_start();
 //$_SESSION["user ID"] = 1;
-//$hid = $_SESSION["user ID"];
+//$uid = $_SESSION["user ID"];
 $servername = "localhost";
 $username = "root";
 $password = NULL;

@@ -24,8 +24,8 @@ spacer {
 <!-- Boilerplate -->
 <?php
 session_start();
-$_SESSION["user ID"] = 1;
-$user = $_SESSION["user ID"];
+//$_SESSION["user ID"] = 1;
+//$uid = $_SESSION["user ID"];
 $servername = "localhost";
 $username = "root";
 $password = NULL;

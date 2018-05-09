@@ -50,6 +50,7 @@ if ($conn->connect_error) {
 //USER TABLE
 	$sql = "CREATE TABLE users (
 	uid INT(10) UNSIGNED PRIMARY KEY,
+	hid INT(10) UNSIGNED,
 	username VARCHAR(20) NOT NULL,
 	passhash VARCHAR(255) NOT NULL,
 	reg_date TIMESTAMP
@@ -338,8 +339,8 @@ if ($conn->connect_error) {
 	}
 
 //TEST DATA for USERS
-	$sql = "INSERT INTO users (uid, username, passhash)
-	VALUES (1, 'example', '" . password_hash("password", PASSWORD_DEFAULT) . "')";
+	$sql = "INSERT INTO users (uid, hid, username, passhash)
+	VALUES (1, 1, 'example', '" . password_hash("password", PASSWORD_DEFAULT) . "')";
 	
 	if ($conn->query($sql) === TRUE) {
 		echo "<BR>New User created successfully";

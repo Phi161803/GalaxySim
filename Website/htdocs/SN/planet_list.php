@@ -24,8 +24,8 @@ spacer {
 <!-- Boilerplate -->
 <?php
 session_start();
-$_SESSION["user ID"] = 1;
-$user = $_SESSION["user ID"];
+//$_SESSION["user ID"] = 1;
+//$uid = $_SESSION["user ID"];
 $servername = "localhost";
 $username = "root";
 $password = NULL;
@@ -56,7 +56,7 @@ if ($result->num_rows > 0) {
         echo 
 			"<holding>
 				<ul style=\"list-style-type:none\">
-					<li>Owner: <a href=\"/SN/planet/planet.php?varname=" . $pid . "\">" . $pid . "</a></li></ul>" .
+					<li>Owner: <a href=\"/SN/planet/planet.php?varname=" . $pid . "\">" . $name . "</a></li></ul>" .
 			"</holding>";
     }
 }

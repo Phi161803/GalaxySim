@@ -24,8 +24,8 @@ spacer {
 <!-- Boilerplate -->
 <?php
 session_start();
-$_SESSION["user ID"] = 1;
-$user = $_SESSION["user ID"];
+//$_SESSION["user ID"] = 1;
+//$uid = $_SESSION["user ID"];
 $servername = "localhost";
 $username = "root";
 $password = NULL;
@@ -74,7 +74,7 @@ if ($result->num_rows > 0) {
 		$sql = "SELECT name FROM planet WHERE pid = $splaname";
 		$splanet = $conn->query($sql);
 		$row2 = $splanet->fetch_assoc();
-        echo 'Starlane to : ' . $row2["name"] . '<br>';
+        echo 'Starlane to : <a href=/SN/planet/planet.php?varname=' . $splaname . ">" . $row2["name"] . '</a><br>';
     }
 } else {
     $lane = TRUE;
@@ -89,7 +89,7 @@ if ($result->num_rows > 0) {
 		$sql = "SELECT name FROM planet WHERE pid = $splaname";
 		$splanet = $conn->query($sql);
 		$row2 = $splanet->fetch_assoc();
-        echo 'Starlane to : ' . $row2["name"] . '<br>';
+        echo 'Starlane to : <a href=/SN/planet/planet.php?varname=' . $splaname . ">" . $row2["name"] . '</a><br>';
     }
 } else {
     if($lane == TRUE) {echo 'Error: No Lanes to Planet.';}
