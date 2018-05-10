@@ -37,6 +37,21 @@ namespace ShadowNova
             loc = Program.r.Next(1, Global.highPID);
         }
 
+        public MilitaryUnit(int a)
+        {
+            mid = ++Global.highMID;
+            name = "Unit " + mid.ToString("D3"); //Left-pads name, e.g. mid = 4 produces name = "Unit 004".
+            owner = a;
+            commander = Program.r.Next(1, Global.highCID);
+            defMob = false;
+            type = false;
+            points = Program.r.Next(0, 999);
+            exp = Program.r.Next(0, 999);
+            active = false;
+            camp = 0;
+            loc = Program.r.Next(1, Global.highPID);
+        }
+
         //If you have a specific actor that you want created, lets you feed everything in.  
         public MilitaryUnit(int mid, string name, int owner, int commander, bool defMob, bool type, int points, int exp, bool active, int camp, int loc)
         {
@@ -88,7 +103,8 @@ namespace ShadowNova
                     reader.GetInt32(6), reader.GetInt32(7), reader.GetBoolean(8),
                     reader.GetInt32(9), reader.GetInt32(10));
                     Global.unitList.Add(militaryUnit);
-                    Global.highCID = reader.GetInt32(0);
+                    Global.highMID = reader.GetInt32(0);
+                    Console.WriteLine("Name of the unit:" + name);
                 }
                 Console.WriteLine("Loaded MilitaryUnits");
                 reader.Close();
@@ -109,7 +125,7 @@ namespace ShadowNova
                 //MilitaryUnit
                 for (int j = 0; j < Global.unitList.Count(); j++)
                 {
-                    query = String.Format("INSERT INTO militaryUnit mid, name, owner, commander, defMob, type, points, exp, active, camp, loc)" +
+                    query = String.Format("INSERT INTO militaryunit (mid, name, owner, commander, defMob, type, points, exp, active, camp, loc)" +
                         " VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}') " +
                         "ON DUPLICATE KEY UPDATE " +
                         "owner='{1}', " +
@@ -120,7 +136,7 @@ namespace ShadowNova
                         "points='{6}', " +
                         "exp='{7}', " +
                         "active='{8}', " +
-                        "camp='{9}'" +
+                        "camp='{9}'," +
                         "loc='{10}'",
                         Global.unitList[j].mid,
                         Global.unitList[j].name,

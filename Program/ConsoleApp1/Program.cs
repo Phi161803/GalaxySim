@@ -151,7 +151,7 @@ namespace ShadowNova
             Actor act = new Actor(false);
             act.saveActor();
             MilitaryUnit unit = new MilitaryUnit(false);
-            unit.loadMilitaryUnit();
+            unit.saveMilitaryUnit();
         }
 
         //Creates a new galaxy with random spawns, good for testing.
@@ -202,6 +202,12 @@ namespace ShadowNova
             {
                     Starlane lane = new Starlane(i);
                     Global.laneList.Add(lane);
+            }
+
+            for (int i = 1; i <= Global.highHID; i++)
+            {
+                MilitaryUnit unit = new MilitaryUnit(i);
+                Global.unitList.Add(unit);
             }
 
 
