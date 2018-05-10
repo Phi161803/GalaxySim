@@ -27,7 +27,7 @@ namespace ShadowNova
             mid = ++Global.highMID;
             name = "Unit " + mid.ToString("D3"); //Left-pads name, e.g. mid = 4 produces name = "Unit 004".
             owner = Program.r.Next(1, Global.highHID);
-            commander = Program.r.Next(1, Global.highCID);
+            commander = 0;
             defMob = false;
             type = false;
             points = Program.r.Next(0, 999);
@@ -42,7 +42,7 @@ namespace ShadowNova
             mid = ++Global.highMID;
             name = "Unit " + mid.ToString("D3"); //Left-pads name, e.g. mid = 4 produces name = "Unit 004".
             owner = a;
-            commander = Program.r.Next(1, Global.highCID);
+            commander = 0;
             defMob = false;
             type = false;
             points = Program.r.Next(0, 999);
@@ -50,6 +50,7 @@ namespace ShadowNova
             active = false;
             camp = 0;
             loc = Program.r.Next(1, Global.highPID);
+            Console.WriteLine("owner cons int:" + owner);
         }
 
         //If you have a specific actor that you want created, lets you feed everything in.  
@@ -66,6 +67,7 @@ namespace ShadowNova
             this.active = active;
             this.camp = camp;
             this.loc = loc;
+            Console.WriteLine("owner cons all:" + owner);
         }
 
         //Helper for save and load functions. Not strictly required, but nice way to create a dummy.
@@ -104,7 +106,7 @@ namespace ShadowNova
                     reader.GetInt32(9), reader.GetInt32(10));
                     Global.unitList.Add(militaryUnit);
                     Global.highMID = reader.GetInt32(0);
-                    Console.WriteLine("Name of the unit:" + name);
+                    Console.WriteLine("owner:" + owner);
                 }
                 Console.WriteLine("Loaded MilitaryUnits");
                 reader.Close();
@@ -128,8 +130,8 @@ namespace ShadowNova
                     query = String.Format("INSERT INTO militaryunit (mid, name, owner, commander, defMob, type, points, exp, active, camp, loc)" +
                         " VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}') " +
                         "ON DUPLICATE KEY UPDATE " +
-                        "owner='{1}', " +
-                        "name='{2}', " +
+                        "owner='{2}', " +
+                        "name='{1}', " +
                         "commander='{3}', " +
                         "defMob='{4}', " +
                         "type='{5}', " +

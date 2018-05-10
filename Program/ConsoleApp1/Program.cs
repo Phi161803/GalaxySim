@@ -208,6 +208,8 @@ namespace ShadowNova
             {
                 MilitaryUnit unit = new MilitaryUnit(i);
                 Global.unitList.Add(unit);
+                unit = new MilitaryUnit(i);
+                Global.unitList.Add(unit);
             }
 
 
