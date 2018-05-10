@@ -142,8 +142,40 @@ else { echo "<BR>No Holdings."; }
 <tr>
 <td>
 <!--MILITARY OVERVIEW SECTION -->
-<h2>Military Overview (To Be Done)</h2>
+<h2>Military Overview</h2>
+<?php
+$military = $conn->query("SELECT * FROM militaryunit WHERE loc = $pid");
 
+if ($military->num_rows > 0) {
+	while($row = $military->fetch_assoc()) {
+		$hid = $row["owner"];
+		$hname = $conn->query("SELECT name FROM house WHERE hid = $hid");
+		$row2 = $hname->fetch_assoc();
+		$cid = $row["commander"];
+		$cname = $conn->query("SELECT name FROM actor WHERE cid = $cid");
+		if ($cname->num_rows > 0){
+			$row3 = $cname->fetch_assoc();
+			$commander = "<a href=\"/SN/character/character.php?varname=" . $cid . "\">" . $row3["name"] . "</a>";
+		} else {
+			$commander = "none";
+		}
+        echo 
+			"<holding>
+				<ul style=\"list-style-type:none\">" .
+					"<li>Name: <a href=\"/SN/military/unit.php?varname=" . $row["mid"] . "\">" . $row["name"] . "</a></li>" .
+					"<li>Type: " . (($row["type"] == 0)?("Ground"):("Space")) . "</li>" .
+					"<li>Mobility: " . (($row["defMob"] == 0)?("Defensive"):("Mobile")) . "</li>" .
+					"<li>Status: " . (($row["active"] == 0)?("Standby"):("Ready")) . "</li>" .
+					"<li>Commander: " . $commander . "</li>" .
+					"<li>Strength: " . $row["points"] . "</li>" .
+					"<li>Experience: " . $row["exp"] . "</li>" .
+					"<li>Owner: <a href=\"/SN/house.php?varname=" . $hid . "\">" . $row2["name"] . "</a></li>" .
+				"</ul>
+			</holding>";
+	}
+}
+else { echo "No Units."; }
+?>
 </tr>
 </td>
 </table>
