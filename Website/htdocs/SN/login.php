@@ -37,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 	
 	if(password_verify($pass, $user->passhash)){
 			$_SESSION["user ID"] = $user->uid;
-			echo "Thank you " . $_POST['uname'] . " for logging in. <br> Click to <a href=\"/SN/house.php?varname=1\">Continue</a>";
+			echo "Thank you " . $_POST['uname'] . " for logging in. <br> Click to <a href=\"/SN/house.php?varname=" . $user->hid . "\">Continue</a>";
 		} else {
 			echo "Invalid username or password.";
 		}
