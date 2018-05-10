@@ -2,24 +2,6 @@
 <html>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <body>
-<?php
-session_start();
-//$_SESSION["user ID"] = 1;
-//$uid = $_SESSION["user ID"];
-$servername = "localhost";
-$username = "root";
-$password = NULL;
-$dbname = "myDB";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-?> 
-
-
 <!--Basic javascript to help iframes move-->
 <script>
 function golink(page, a) {
@@ -58,18 +40,15 @@ function update(val){
 }
 
 </script>
+
 <?php
-	echo 'Testing Control Panel<br>
-	<button onclick="gomap("create_database")">Recreate Database Page</button>
-	<button onclick="golink("house", ' . $_SESSION["user ID"] . ')">Default House</button>
+	session_start();
+	echo 'User Control Panel<br>
+	<button onclick="golink("house", ' . $_SESSION["user ID"] . ')">Your House</button>
 	<button onclick="golink("/SN/character/character", 1)">Default Character</button>
-	<button onclick="golink("create_house")">Create New House</button>
 	<BR>
 	<button onclick="golink("house_list")">House List</button>
 	<button onclick="golink("planet_list")">Planet List</button>
-	<button onclick="update("manualTick")">Manual Tick</button>
-	<button onclick="update("createGal")">Create Galaxy</button>
-	<button onclick="update("shutdown")">Shutdown</button>
 	<button onclick="golink("logout")">Log Out</button>';
 ?>
 </body>

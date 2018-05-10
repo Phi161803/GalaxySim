@@ -23,6 +23,28 @@ if ($conn->connect_error) {
 
 <h1>Welcome to Shadow Nova</h1>
 
+<script>
+function goadmin() {
+var x = ".php";
+parent.document.getElementById("control_frame").src = "Admin_Controls.php";
+parent.document.getElementById("control_frame").width = "100%";
+parent.document.getElementById("control_frame").height = "90px";
+setTimeout(function(){
+	parent.document.getElementById("map_frame").src = "map.php";
+},500);
+}
+
+function gouser() {
+var x = ".php";
+parent.document.getElementById("control_frame").src = "User_Controls.php";
+parent.document.getElementById("control_frame").width = "100%";
+parent.document.getElementById("control_frame").height = "90px";
+setTimeout(function(){
+	parent.document.getElementById("map_frame").src = "map.php";
+},500);
+}
+</script>
+
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
@@ -37,6 +59,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 	
 	if(password_verify($pass, $user->passhash)){
 			$_SESSION["user ID"] = $user->uid;
+			$_SESSION["HID"] = $user->hid;
+			if($_SESSION["user ID"] == 0){echo "<script>goadmin()</script>";}
+			if($_SESSION["user ID"] != 0){echo "<script>gouser()</script>";}
 			echo "Thank you " . $_POST['uname'] . " for logging in. <br> Click to <a href=\"/SN/house.php?varname=" . $user->hid . "\">Continue</a>";
 		} else {
 			echo "Invalid username or password.";

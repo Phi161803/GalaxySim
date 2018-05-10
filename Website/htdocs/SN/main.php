@@ -58,7 +58,7 @@ data {
 </map>
 
 <data>
-	<iframe src="http://localhost/SN/Admin_Controls.php"  width="100%" height="90px"></iframe>
+	<iframe id="control_frame" name="control_frame" width="0%" height="0" src=""></iframe>
 	<iframe id="data_frame" name="data_frame" src="http://localhost/SN/login.php"style="border:none;" width="100%" height="500"></iframe>
 </data>
 
