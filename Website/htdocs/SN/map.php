@@ -52,7 +52,7 @@ echo
 		var img = document.getElementById("planetA");
 		ctx.translate('. $size*16 . ',' . $size*16 . ');
 		
-		var linkText="http://google.com";
+		var linkText="";
 		var linkX=32;
 		var linkY=32;
 		var linkHeight=10;

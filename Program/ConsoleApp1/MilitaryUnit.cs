@@ -144,11 +144,11 @@ namespace ShadowNova
                         Global.unitList[j].name,
                         Global.unitList[j].owner,
                         Global.unitList[j].commander,
-                        Global.unitList[j].defMob,
-                        Global.unitList[j].type,
+                        Convert(Global.unitList[j].defMob),
+                        Convert(Global.unitList[j].type),
                         Global.unitList[j].points,
                         Global.unitList[j].exp,
-                        Global.unitList[j].active,
+                        Convert(Global.unitList[j].active),
                         Global.unitList[j].camp,
                         Global.unitList[j].loc);
                     cmd = new MySqlCommand(query, dbCon.Connection);
@@ -157,6 +157,13 @@ namespace ShadowNova
                 Console.WriteLine("MilitaryUnit Data Saved.");
                 dbCon.Close();
             }
+        }
+
+        public int Convert(bool a)
+        {
+            if (a == false) { return 0; }
+            if (a == true) { return 1; }
+            return 0;
         }
     }
 }

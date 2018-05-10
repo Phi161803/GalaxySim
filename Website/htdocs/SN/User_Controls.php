@@ -52,6 +52,5 @@ function update(val){
 		<button onclick=\"golink('planet_list')\">Planet List</button>
 		<button onclick=\"golink('logout')\">Log Out</button>";
 ?>
-?>
 </body>
 </html>
