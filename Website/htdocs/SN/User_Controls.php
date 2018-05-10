@@ -43,13 +43,15 @@ function update(val){
 
 <?php
 	session_start();
-	echo 'User Control Panel<br>
-	<button onclick="golink("house", ' . $_SESSION["user ID"] . ')">Your House</button>
-	<button onclick="golink("/SN/character/character", 1)">Default Character</button>
-	<BR>
-	<button onclick="golink("house_list")">House List</button>
-	<button onclick="golink("planet_list")">Planet List</button>
-	<button onclick="golink("logout")">Log Out</button>';
+	echo "
+		Testing Control Panel<br>
+		<button onclick=\"golink('house', " . $_SESSION['user ID'] . ")\">Default House</button>
+		<button onclick=\"golink('/SN/character/character', 1)\">Default Character</button>
+		<BR>
+		<button onclick=\"golink('house_list')\">House List</button>
+		<button onclick=\"golink('planet_list')\">Planet List</button>
+		<button onclick=\"golink('logout')\">Log Out</button>";
+?>
 ?>
 </body>
 </html>

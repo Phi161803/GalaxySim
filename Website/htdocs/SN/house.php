@@ -42,7 +42,7 @@ if ($conn->connect_error) {
 
 <body>
 <?php //getting passed data
-	if (empty($_GET)){$hid = 1;}
+	if (empty($_GET)){$hid = $_SESSION["HID"];}
 	else {$hid = $_GET['varname'];}
 ?>
 

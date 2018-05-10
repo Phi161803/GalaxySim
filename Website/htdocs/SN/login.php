@@ -29,6 +29,7 @@ var x = ".php";
 parent.document.getElementById("control_frame").src = "Admin_Controls.php";
 parent.document.getElementById("control_frame").width = "100%";
 parent.document.getElementById("control_frame").height = "90px";
+parent.document.getElementById("control_frame").border = "1";
 setTimeout(function(){
 	parent.document.getElementById("map_frame").src = "map.php";
 },500);
@@ -39,6 +40,7 @@ var x = ".php";
 parent.document.getElementById("control_frame").src = "User_Controls.php";
 parent.document.getElementById("control_frame").width = "100%";
 parent.document.getElementById("control_frame").height = "90px";
+parent.document.getElementById("control_frame").border = "1";
 setTimeout(function(){
 	parent.document.getElementById("map_frame").src = "map.php";
 },500);
@@ -57,15 +59,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 	$result = $stmt->get_result();
 	$user = $result->fetch_object();
 	
-	if(password_verify($pass, $user->passhash)){
-			$_SESSION["user ID"] = $user->uid;
-			$_SESSION["HID"] = $user->hid;
-			if($_SESSION["user ID"] == 0){echo "<script>goadmin()</script>";}
-			if($_SESSION["user ID"] != 0){echo "<script>gouser()</script>";}
-			echo "Thank you " . $_POST['uname'] . " for logging in. <br> Click to <a href=\"/SN/house.php?varname=" . $user->hid . "\">Continue</a>";
-		} else {
-			echo "Invalid username or password.";
+	if ($user != null)
+	{
+		if(password_verify($pass, $user->passhash)){
+				$_SESSION["user ID"] = $user->uid;
+				$_SESSION["HID"] = $user->hid;
+				if($_SESSION["user ID"] == 1){echo "<script>gouser();</script>";}
+				if($_SESSION["user ID"] == 2){echo "<script>goadmin();</script>";}
+				echo "Thank you " . $_POST['uname'] . " for logging in. <br> Click to <a href=\"/SN/house.php?varname=" . $user->hid . "\">Continue</a>";
+			} else {
+				echo "Invalid username or password.";
+			}
+	}
+	else{
+			echo "<script>
+			\$curmsg = document.getElementbyId(\"msg\").innerHTML;
+			\$newmsg = \"Invalid username or password.\"
+			document.getElementbyId(\"msg\").innerHTML = \$curmsg + \$newmsg;
+			</script>";
 		}
+}
+//Tempt code to allow refreshing.
+if (isset($_SESSION["user ID"]) == true)
+{
+	echo '<script>parent.document.getElementById("data_frame").src = "house.php";</script>';
+	if($_SESSION["user ID"] == 1){echo "<script>gouser();</script>";}
+	if($_SESSION["user ID"] == 2){echo "<script>goadmin();</script>";}
 }
 ?>
 
@@ -73,10 +92,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 <h2>You are not logged in</h2>
 
 <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
-	<input type="text" id="uname" name="uname" value="example" required><br>
+	<input type="text" id="uname" name="uname" value="UserMarley" required><br>
 	<input type="password" id="pword" name="pword" value="password" required><br>
 	<input type="submit" value="Log In">
 </form>
+<div id=msg></div>
 <?php endif; ?>
 
 </body>
