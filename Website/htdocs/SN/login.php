@@ -75,9 +75,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 //Tempt code to allow refreshing.
 if (isset($_SESSION["user ID"]) == true)
 {
-	echo '<script>parent.document.getElementById("data_frame").src = "house.php";</script>';
 	if($_SESSION["user ID"] == 1){echo "<script>gouser();</script>";}
 	if($_SESSION["user ID"] == 2){echo "<script>goadmin();</script>";}
+	echo '<script>parent.document.getElementById("data_frame").src = "house.php";</script>';
 }
 ?>
 

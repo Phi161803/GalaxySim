@@ -13,13 +13,14 @@ if (ini_get("session.use_cookies")) {
 		$params["secure"], $params["httponly"]
 	);
 }
+session_destroy();
 echo "<script>
 parent.document.getElementById(\"control_frame\").src = \"\";
 parent.document.getElementById(\"control_frame\").width = \"0\";
 parent.document.getElementById(\"control_frame\").height = \"0\";
 parent.document.getElementById(\"control_frame\").border = \"0\";
 </script>";
-session_destroy();
+
 ?>
 
 <h2>You have been logged out</h2>
