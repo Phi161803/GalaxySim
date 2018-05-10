@@ -331,20 +331,22 @@ if ($conn->connect_error) {
 //Military Unit TABLE
 	$sql = "CREATE TABLE militaryunit (
 	mid INT(10) UNSIGNED PRIMARY KEY,
-	owner INT(10) NOT NULL,
-	commander INT(10) NOT NULL,
+	name VARCHAR(50) NOT NULL,
+	owner INT(10) UNSIGNED NOT NULL,
+	commander INT(10) UNSIGNED NOT NULL,
 	defMob BOOL NOT NULL,
 	type BOOL NOT NULL,
-	points INT(10) NOT NULL,
-	exp INT(10) NOT NULL,
+	points INT(10) UNSIGNED NOT NULL,
+	exp INT(10) UNSIGNED NOT NULL,
 	active BOOL NOT NULL,
 	camp INT(10) NOT NULL,
+	loc INT(10) NOT NULL,
 	reg_date TIMESTAMP
 	)";
-	//gender 1 FEMALE, 0 MALE
-	//birth currently being used as a straight age number, until dating system is implemented.
-	//preg 0 NOT PREG, cid IF PREG
-	//pos 1 HEAD, LIST THESE LATER
+	//defMob: 0 = Defensive, 1 = Mobile
+	//type: 0 = Land, 1 = Space
+	//active: 0 = Standby, 1 = Ready For War
+	//camp: campaign ID (use 0 for no campaign)
 	
 	
 	if ($conn->query($sql) === TRUE) {
@@ -522,7 +524,7 @@ if ($conn->connect_error) {
 	}
 	
 		$sql = "INSERT INTO actor (cid, name, birth, gender, health, preg, pregStart, descript, loc, owner, pos, intel, brawn, charisma, expMilitary, expAdmin)
-	VALUES (2, 'Alice Bob', 12600, 1, 5, 1, 5, 'Alice Bob was his name.', 2, 1, 1, 3, 4, 6, 3, 4)";
+	VALUES (2, 'Alice Bob', 12600, 1, 5, 1, 5, 'Alice Bob was her name.', 2, 1, 1, 3, 4, 6, 3, 4)";
 
 	if ($conn->query($sql) === TRUE) {
 		echo "<BR>New Character created successfully";
@@ -550,6 +552,28 @@ if ($conn->connect_error) {
 	} else {
 		echo "<BR>Error: " . $sql . "<br>" . $conn->error;
 	}
+	
+	
+	
+//TEST DATA for militaryunit
+	$sql = "INSERT INTO militaryunit (mid, name, owner, commander, defMob, type, points, exp, active, camp, loc)
+	VALUES (1, 'Home Guard', 1, 0, FALSE, FALSE, 43, 0, FALSE, 0, 1)";
+	
+	if ($conn->query($sql) === TRUE) {
+		echo "<BR>New Military Unit created successfully";
+	} else {
+		echo "<BR>Error: " . $sql . "<br>" . $conn->error;
+	}
+	
+	$sql = "INSERT INTO militaryunit (mid, name, owner, commander, defMob, type, points, exp, active, camp, loc)
+	VALUES (2, 'USS Enterprise', 1, 2, TRUE, TRUE, 27, 0, TRUE, 0, 1)";
+	
+	if ($conn->query($sql) === TRUE) {
+		echo "<BR>New Military Unit created successfully";
+	} else {
+		echo "<BR>Error: " . $sql . "<br>" . $conn->error;
+	}
+	
 	
 
 $conn->close();

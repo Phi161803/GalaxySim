@@ -83,7 +83,7 @@ else { echo "A house of few words.";}
 <td>
 <h2>Holding Overview</h2>
 <?php
-$holding = $conn->query("SELECT pid, hid, food, rawMat, energy, upgrade1, upgrade2, upgrade3, upgrade4 FROM planet_holding WHERE hid = $hid");
+$holding = $conn->query("SELECT * FROM planet_holding WHERE hid = $hid");
 $i = 1;
 $upgradeX = "upgrade" . $i;
 
@@ -96,8 +96,8 @@ if ($holding->num_rows > 0) {
 		$row2 = $pname->fetch_assoc();
         echo 
 			"<holding>
-				<ul style=\"list-style-type:none\">
-					<li>Planet: <a href=\"/SN/planet/planet.php?varname=" . $row["pid"] . "\">" . $row2["name"] . "</a></li>" .
+				<ul style=\"list-style-type:none\">" .
+					"<li>Planet: <a href=\"/SN/planet/planet.php?varname=" . $row["pid"] . "\">" . $row2["name"] . "</a></li>" .
 					"<li>Food: " . $row["food"] . "</li>" .
 					"<li>Raw Materials: " . $row["rawMat"] . "</li>" .
 					"<li>Energy: " . $row["energy"] . "</li>";
@@ -124,7 +124,7 @@ else { echo "No Holdings."; }
 <td>
 <h2>Character Overview</h2>
 <?php
-$actor = $conn->query("SELECT cid, name, birth, gender, health, preg, pregStart, descript, loc, owner, pos, intel, brawn, charisma, expMilitary, expAdmin FROM actor WHERE owner = $hid");
+$actor = $conn->query("SELECT * FROM actor WHERE owner = $hid");
 
 //$result = $conn->query($holding);
 if ($actor->num_rows > 0) {
@@ -135,21 +135,21 @@ if ($actor->num_rows > 0) {
 		$row2 = $pname->fetch_assoc();
         echo 
 			"<holding>
-				<ul style=\"list-style-type:none\">
-					<li>Name: <a href=\"/SN/character/character.php?varname=" . $row["cid"] . "\">" . $row["name"] . "</a></li>" .
+				<ul style=\"list-style-type:none\">" .
+					"<li>Name: <a href=\"/SN/character/character.php?varname=" . $row["cid"] . "\">" . $row["name"] . "</a></li>" .
 					"<li>Age: " . ($row["birth"]/360) . " years old.</li>" .
 					"<li>Gender: " . (($row["gender"] == 0)?("male"):("female")) . "</li>" .
 					"<li>Health: " . $row["health"] . "</li>" .
 					"<li>Description: " . $row["descript"] . "</li>" .
-					"<li>Resides On: " . $row2["name"] . "</li>" .
+					"<li>Resides On: <a href=\"/SN/planet/planet.php?varname=" . $row["loc"] . "\">" . $row2["name"] . "</a></li>" .
 					"<li>Position: " . (($row["pos"] == 1)?("Head of House"):("None")) . " </li>" .
 					"<li>Strength: " . $row["brawn"] . "</li>" .
 					"<li>Intelligence: " . $row["intel"] . "</li>" .
 					"<li>Charisma: " . $row["charisma"] . "</li>" .
 					"<li>Miltiary Skill: " . $row["expMilitary"] . "</li>" .
-					"<li>Admin Skill: " . $row["expAdmin"] . "</li>";
-		echo	"</ul>" .
-			"</holding>";
+					"<li>Admin Skill: " . $row["expAdmin"] . "</li>" .
+				"</ul>
+			</holding>";
     }
 }
 else { echo "No Characters."; }
@@ -162,7 +162,40 @@ else { echo "No Characters."; }
 <!--MILITARY OVERVIEW SECTION -->
 <tr>
 <td>
-<h2>Military Overview (To Be Done)</h2>
+<h2>Military Overview</h2>
+<?php
+$military = $conn->query("SELECT * FROM militaryunit WHERE owner = $hid");
+
+if ($military->num_rows > 0) {
+	while($row = $military->fetch_assoc()) {
+		$pid = $row["loc"];
+		$pname = $conn->query("SELECT name FROM planet WHERE pid = $pid");
+		$row2 = $pname->fetch_assoc();
+		$cid = $row["commander"];
+		$cname = $conn->query("SELECT name FROM actor WHERE cid = $cid");
+		if ($cname->num_rows > 0){
+			$row3 = $cname->fetch_assoc();
+			$commander = "<a href=\"/SN/character/character.php?varname=" . $cid . "\">" . $row3["name"] . "</a>";
+		} else {
+			$commander = "none";
+		}
+        echo 
+			"<holding>
+				<ul style=\"list-style-type:none\">" .
+					"<li>Name: <a href=\"/SN/military/unit.php?varname=" . $row["mid"] . "\">" . $row["name"] . "</a></li>" .
+					"<li>Type: " . (($row["type"] == 0)?("Ground"):("Space")) . "</li>" .
+					"<li>Mobility: " . (($row["defMob"] == 0)?("Defensive"):("Mobile")) . "</li>" .
+					"<li>Status: " . (($row["active"] == 0)?("Standby"):("Ready")) . "</li>" .
+					"<li>Commander: " . $commander . "</li>" .
+					"<li>Strength: " . $row["points"] . "</li>" .
+					"<li>Experience: " . $row["exp"] . "</li>" .
+					"<li>Location: <a href=\"/SN/planet/planet.php?varname=" . $pid . "\">" . $row2["name"] . "</a></li>" .
+				"</ul>
+			</holding>";
+	}
+}
+else { echo "No Units."; }
+?>
  
 </tr>
 </td>
