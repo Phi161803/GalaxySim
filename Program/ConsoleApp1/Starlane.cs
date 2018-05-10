@@ -168,6 +168,24 @@ namespace ShadowNova
             known = null;
         }
 
+        public bool containsPlanet (int pid)
+        {
+            return (pid == fPlanet || pid == sPlanet);
+        }
+
+        public int[] getPlanets()
+        {
+            int[] planets = new int[] { fPlanet, sPlanet };
+            return planets;
+        }
+
+        public int getOtherPlanet (int pid)
+        {
+            if (pid == fPlanet) { return sPlanet; }
+            else if (pid == sPlanet) { return fPlanet; }
+            else { return 0; }
+        }
+
         int min(int a, int b)
         {
             if (a < b) return a;

@@ -226,5 +226,11 @@ namespace ShadowNova
                 dbCon.Close();
             }
         }
+
+        public double distanceFrom(Planet other)
+        {
+            double dist = Math.Sqrt(Math.Pow((locX - other.locX), 2) + Math.Pow((locY - other.locY), 2));
+            return dist;
+        }
     }
 }

@@ -204,6 +204,8 @@ namespace ShadowNova
                     Global.laneList.Add(lane);
             }
 
+            connectClusters();
+
             for (int i = 1; i <= Global.highHID; i++)
             {
                 MilitaryUnit unit = new MilitaryUnit(i);
@@ -216,7 +218,76 @@ namespace ShadowNova
 
         }
 
+        static void connectClusters()
+        {
+            List<Planet> connected = new List<Planet>();
+            List<Planet> unconnected = new List<Planet>(Global.planetList);
+            int totalPlanets = Global.planetList.Count;
 
+            Planet initial = Global.planetList[1];
+            Console.WriteLine("Starting search from " + initial.name + "(" + initial.pid + ")");
+            connected.Add(initial);
+            unconnected.Remove(initial);
+            //Depth-first search to determine initial connected area.
+            dfs(initial, connected, unconnected);
+            Console.WriteLine("Planets connected: " + connected.Count + " out of " + totalPlanets);
+            
+            while (connected.Count < totalPlanets - 1) //Subtract 1 because dummy planet 0 will never connect.
+            {
+                //Find the shortest potential starlane from one list to the other.
+                Planet fPlanet = connected[1];
+                Planet sPlanet = unconnected[1];
+                double shortestDist = fPlanet.distanceFrom(sPlanet);
+                for (int i = 1; i < connected.Count; i++)
+                {
+                    for (int j = 1; j < unconnected.Count; j++)
+                    {
+                        double dist = connected[i].distanceFrom(unconnected[j]);
+                        if (dist < shortestDist)
+                        {
+                            shortestDist = dist;
+                            fPlanet = connected[i];
+                            sPlanet = unconnected[j];
+                        }
+                    }
+                }
+                //Create the shortest starlane found.
+                Starlane lane = new Starlane(++Global.highSLID, fPlanet.pid, sPlanet.pid, true);
+                Global.laneList.Add(lane);
+                Console.WriteLine("Added new lane from " + fPlanet.name + "(" + fPlanet.pid + ") to " + sPlanet.name + "(" + sPlanet.pid + ")");
+                //Reset lists.
+                connected.Clear();
+                connected.Add(initial);
+                unconnected = new List<Planet>(Global.planetList);
+                unconnected.Remove(initial);
+                //Depth-first search to determine new connected area.
+                dfs(connected[0], connected, unconnected);
+                Console.WriteLine("Planets connected: " + connected.Count + " out of " + totalPlanets);
+            }
+        }
+
+        static void dfs(Planet current, List<Planet> connected, List<Planet> unconnected)
+        {
+            //Search Starlanes list for lanes that include this planet.
+            for (int i = 0; i < Global.laneList.Count; i++)
+            {
+                Starlane lane = Global.laneList[i];
+                if (lane.containsPlanet(current.pid))
+                {
+                    //Find the other planet connected to this lane.
+                    int otherPid = lane.getOtherPlanet(current.pid);
+                    Planet other = Global.planetList.Find(x => (x.pid == otherPid)); //I hope that works how I think it does.
+                    //Check whether the other planet has been visited.
+                    if (!connected.Contains(other))
+                    {
+                        //Add the other planet to the list, and recursively call dfs.
+                        connected.Add(other);
+                        unconnected.Remove(other);
+                        dfs(other, connected, unconnected);
+                    }
+                }
+            }
+        }
 
 
     }
