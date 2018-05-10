@@ -11,6 +11,7 @@ $servername = "localhost";
 $username = "root";
 $password = NULL;
 $dbname = "myDB";
+$faillog = 0;
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -67,17 +68,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 				if($_SESSION["user ID"] == 1){echo "<script>gouser();</script>";}
 				if($_SESSION["user ID"] == 2){echo "<script>goadmin();</script>";}
 				echo "Thank you " . $_POST['uname'] . " for logging in. <br> Click to <a href=\"/SN/house.php?varname=" . $user->hid . "\">Continue</a>";
-			} else {
-				echo "Invalid username or password.";
-			}
+			} else {$faillog = 1;}
 	}
-	else{
-			echo "<script>
-			\$curmsg = document.getElementbyId(\"msg\").innerHTML;
-			\$newmsg = \"Invalid username or password.\"
-			document.getElementbyId(\"msg\").innerHTML = \$curmsg + \$newmsg;
-			</script>";
-		}
+	else{$faillog = 1;}
 }
 //Tempt code to allow refreshing.
 if (isset($_SESSION["user ID"]) == true)
@@ -96,7 +89,7 @@ if (isset($_SESSION["user ID"]) == true)
 	<input type="password" id="pword" name="pword" value="password" required><br>
 	<input type="submit" value="Log In">
 </form>
-<div id=msg></div>
+<?php if($faillog == 1) {echo "Failed to Login";} ?>
 <?php endif; ?>
 
 </body>
